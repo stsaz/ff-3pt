@@ -1,0 +1,7 @@
+# FF3PT := .
+# FF_OBJ_DIR := .
+FF3PT_CFLAGS ?= -c -O3
+FF3PT_CFLAGS += -Werror -Wall -Wextra
+
+$(FF_OBJ_DIR)/%.o: $(FF3PT)/crc/%.c
+	$(C) $(FF3PT_CFLAGS) $< -o$@
