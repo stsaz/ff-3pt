@@ -1,0 +1,76 @@
+# libmpg123 for FF
+# Simon Zolin, 2016
+
+OPT := LTO3
+DEBUG := 0
+include $(FF3PT)/makeconf
+
+CFLAGS += \
+	-I. -Isrc -Isrc/libmpg123 -I$(FF3PT)/mpg123 \
+	-DMPG123_EXP -DHAVE_CONFIG_H -DNO_ID3V2 -DNO_ICY -DNO_WARNING -DNO_ERRORMSG -DNO_ERETURN \
+	-DOPT_MULTI -DOPT_X86_64 -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT -DOPT_AVX \
+	-fomit-frame-pointer -funroll-all-loops -finline-functions -ffast-math
+
+SRC := \
+	src/libmpg123/compat.c \
+	src/libmpg123/parse.c \
+	src/libmpg123/frame.c \
+	src/libmpg123/format.c \
+	src/libmpg123/dct64.c \
+	src/libmpg123/optimize.c \
+	src/libmpg123/readers.c \
+	src/libmpg123/tabinit.c \
+	src/libmpg123/libmpg123.c \
+	src/libmpg123/stringbuf.c \
+	src/libmpg123/ntom.c \
+	src/libmpg123/synth.c  \
+	src/libmpg123/layer1.c \
+	src/libmpg123/layer2.c \
+	src/libmpg123/layer3.c \
+	src/libmpg123/dither.c \
+	src/libmpg123/feature.c
+
+SRC_AS := \
+	src/libmpg123/getcpuflags_x86_64.S \
+	src/libmpg123/dct36_x86_64.S \
+	src/libmpg123/dct64_x86_64_float.S \
+	src/libmpg123/dct64_x86_64.S \
+	src/libmpg123/dct36_avx.S \
+	src/libmpg123/dct64_avx_float.S \
+	src/libmpg123/dct64_avx.S \
+	src/libmpg123/synth_8bit.S \
+	src/libmpg123/synth_s32.S \
+	src/libmpg123/synth_real.S \
+	src/libmpg123/synth_x86_64_float.S \
+	src/libmpg123/synth_x86_64_s32.S \
+	src/libmpg123/synth_stereo_x86_64_float.S \
+	src/libmpg123/synth_stereo_x86_64_s32.S \
+	src/libmpg123/synth_x86_64.S \
+	src/libmpg123/synth_stereo_x86_64.S \
+	src/libmpg123/synth_stereo_avx_float.S \
+	src/libmpg123/synth_stereo_avx_s32.S \
+	src/libmpg123/synth_stereo_avx.S
+
+ifeq ($(OS),win)
+SRC += src/libmpg123/lfs_wrap.c
+else
+SRC += src/libmpg123/lfs_alias.c
+endif
+
+OBJ := mpg123-ff.o $(SRC:.c=.o)
+OBJ += $(SRC_AS:.S=.o)
+
+%.o: $(FF3PT)/mpg123/%.c
+	$(C) $(CFLAGS) $< -o$@
+
+%.o: %.c $(wildcard ./*.h)
+	$(C) $(CFLAGS) $<  -o$@
+
+%.o: %.S $(wildcard ./*.h)
+	$(C) $(CFLAGS) $<  -o$@
+
+libmpg123-ff.$(SO): $(OBJ)
+	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+
+clean:
+	rm -fv $(OBJ) libmpg123-ff.$(SO)
