@@ -1,0 +1,252 @@
+From c9afbb5a3fc765a2dfdb5c8a35fcc761c79d0848 Mon Sep 17 00:00:00 2001
+From: Simon Zolin <stsaz@yandex.ru>
+Date: Mon, 20 Jun 2016 19:49:08 +0300
+Subject: [PATCH 1/3] build with gcc/mingw on linux/windows
+
+---
+ Console/Console.cpp        |  9 +++++++++
+ MACDll/MACDll.cpp          | 10 ++++++++--
+ MACDll/MACDll.h            |  3 +++
+ MACLib/APESimple.cpp       |  2 +-
+ MACLib/BitArray.cpp        |  2 +-
+ MACLib/BitArray.h          |  2 +-
+ MACLib/md5.cpp             |  2 +-
+ Shared/All.h               |  8 ++++----
+ Shared/GlobalFunctions.cpp |  4 ++--
+ Shared/NoWindows.h         |  6 ++++++
+ Shared/SmartPtr.h          |  2 +-
+ 11 files changed, 37 insertions(+), 13 deletions(-)
+
+diff --git a/Console/Console.cpp b/Console/Console.cpp
+index 9437c50..96178f7 100644
+--- a/Console/Console.cpp
++++ b/Console/Console.cpp
+@@ -13,6 +13,15 @@ Copyrighted (c) 2000 - 2015 Matthew T. Ashland.  All Rights Reserved.
+ #include "CharacterHelper.h"
+ using namespace APE;
+ 
++#undef _T
++#define _T
++#define _ftprintf  fprintf
++#define _tcsncpy strncpy
++#define _tcscpy strcpy
++#define _tcsnicmp strncasecmp
++#define _ttoi atoi
++#define _tmain main
++
+ // defines
+ #define COMPRESS_MODE		0
+ #define DECOMPRESS_MODE		1
+diff --git a/MACDll/MACDll.cpp b/MACDll/MACDll.cpp
+index 3220301..81f1543 100644
+--- a/MACDll/MACDll.cpp
++++ b/MACDll/MACDll.cpp
+@@ -1,4 +1,6 @@
+-#include "stdafx.h"
++#include "All.h"
++#include "MACLib.h"
++using namespace APE;
+ #include "resource.h"
+ #include "MACDll.h"
+ #include "WinFileIO.h"
+@@ -11,6 +13,7 @@
+ #include "APEInfo.h"
+ #include "APETag.h"
+ #include "CharacterHelper.h"
++#include IO_HEADER_FILE
+ 
+ int __stdcall GetVersionNumber()
+ {
+@@ -20,6 +23,7 @@ int __stdcall GetVersionNumber()
+ int __stdcall GetInterfaceCompatibility(int nVersion, BOOL bDisplayWarningsOnFailure, HWND hwndParent)
+ {
+     int nRetVal = 0;
++#if 0
+     if (nVersion > MAC_FILE_VERSION_NUMBER)
+     {
+         nRetVal = -1;
+@@ -45,12 +49,13 @@ int __stdcall GetInterfaceCompatibility(int nVersion, BOOL bDisplayWarningsOnFai
+             MessageBox(hwndParent, cMessage, _T("Program Requires Updating"), MB_OK | MB_ICONINFORMATION);
+         }
+     }
+-
++#endif
+     return nRetVal;
+ }
+ 
+ int __stdcall ShowFileInfoDialog(const str_ansi * pFilename, HWND hwndWindow)
+ {
++#if 0
+        // convert the filename
+     CSmartPtr<wchar_t> spFilename(CAPECharacterHelper::GetUTF16FromANSI(pFilename), TRUE);
+ 
+@@ -86,6 +91,7 @@ int __stdcall ShowFileInfoDialog(const str_ansi * pFilename, HWND hwndWindow)
+         MessageBox(hwndWindow, _T("File type not supported. (only .ape, .apl, and .wav files currently supported)"), _T("File Info: Unsupported File Type"), MB_OK);
+         return 0;
+     };
++#endif
+ }
+ 
+ int __stdcall TagFileSimple(const str_ansi * pFilename, const char * pArtist, const char * pAlbum, const char * pTitle, const char * pComment, const char * pGenre, const char * pYear, const char * pTrack, BOOL bClearFirst, BOOL bUseOldID3)
+diff --git a/MACDll/MACDll.h b/MACDll/MACDll.h
+index 6a985fe..5777405 100644
+--- a/MACDll/MACDll.h
++++ b/MACDll/MACDll.h
+@@ -16,6 +16,9 @@ Includes
+ #include "All.h"
+ #include "MACLib.h"
+ 
++#define HWND void*
++#define HINSTANCE void*
++
+ /*****************************************************************************************
+ Defines (implemented elsewhere)
+ *****************************************************************************************/
+diff --git a/MACLib/APESimple.cpp b/MACLib/APESimple.cpp
+index 659094c..0d51603 100644
+--- a/MACLib/APESimple.cpp
++++ b/MACLib/APESimple.cpp
+@@ -6,7 +6,7 @@
+ #include IO_HEADER_FILE
+ #include "MACProgressHelper.h"
+ #include "GlobalFunctions.h"
+-#include "MD5.h"
++#include "md5.h"
+ #include "CharacterHelper.h"
+ using namespace APE;
+ 
+diff --git a/MACLib/BitArray.cpp b/MACLib/BitArray.cpp
+index 88fd5e7..ccbb830 100644
+--- a/MACLib/BitArray.cpp
++++ b/MACLib/BitArray.cpp
+@@ -3,7 +3,7 @@ Includes
+ ************************************************************************************/
+ #include "All.h"
+ #include "BitArray.h"
+-#include "MD5.h"
++#include "md5.h"
+ 
+ namespace APE
+ {
+diff --git a/MACLib/BitArray.h b/MACLib/BitArray.h
+index ef2ef5d..74a1131 100644
+--- a/MACLib/BitArray.h
++++ b/MACLib/BitArray.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include "IO.h"
+-#include "MD5.h"
++#include "md5.h"
+ 
+ namespace APE
+ {
+diff --git a/MACLib/md5.cpp b/MACLib/md5.cpp
+index 98031e3..2c29a35 100644
+--- a/MACLib/md5.cpp
++++ b/MACLib/md5.cpp
+@@ -19,7 +19,7 @@
+ *****************************************************************************/
+ 
+ #include "All.h"
+-#include "MD5.h"
++#include "md5.h"
+ 
+ namespace APE
+ {
+diff --git a/Shared/All.h b/Shared/All.h
+index 3869b1e..e55967e 100644
+--- a/Shared/All.h
++++ b/Shared/All.h
+@@ -39,14 +39,12 @@ Global includes
+ #define ape_max(a,b)    (((a) > (b)) ? (a) : (b))
+ #define ape_min(a,b)    (((a) < (b)) ? (a) : (b))
+ 
+-#include "SmartPtr.h"
+-
+ /*****************************************************************************************
+ Global compiler settings (useful for porting)
+ *****************************************************************************************/
+ // assembly code (helps performance, but limits portability)
+ #ifdef PLATFORM_WINDOWS
+-    #define ENABLE_SSE_ASSEMBLY
++    // #define ENABLE_SSE_ASSEMBLY
+ 	#define ENABLE_MMX_ASSEMBLY
+ #endif
+ 
+@@ -56,7 +54,7 @@ Global compiler settings (useful for porting)
+ // porting or third party usage, it's probably best to not bother with APE_BACKWARDS_COMPATIBILITY.
+ // A future release of Monkey's Audio itself may remove support for these obsolete files.
+ #if defined(PLATFORM_WINDOWS)
+-	#define APE_BACKWARDS_COMPATIBILITY
++	// #define APE_BACKWARDS_COMPATIBILITY
+ #endif
+ 
+ // compression modes
+@@ -136,6 +134,8 @@ Global macros
+     #define ASSERT(e)                                    
+ #endif
+ 
++#include "SmartPtr.h"
++
+ /*****************************************************************************************
+ WAVE format descriptor (binary compatible with Windows define, but in the APE namespace)
+ *****************************************************************************************/
+diff --git a/Shared/GlobalFunctions.cpp b/Shared/GlobalFunctions.cpp
+index 549a8fe..e518033 100644
+--- a/Shared/GlobalFunctions.cpp
++++ b/Shared/GlobalFunctions.cpp
+@@ -73,7 +73,7 @@ bool FileExists(wchar_t * pFilename)
+ 
+ void * AllocateAligned(int nBytes, int nAlignment)
+ {
+-#ifdef _MSC_VER
++#if defined _MSC_VER || defined __MINGW64__
+     return _aligned_malloc(nBytes, nAlignment);
+ #else
+     void * pMemory = NULL;
+@@ -84,7 +84,7 @@ void * AllocateAligned(int nBytes, int nAlignment)
+ 
+ void FreeAligned(void * pMemory)
+ {
+-#ifdef _MSC_VER
++#if defined _MSC_VER || defined __MINGW64__
+     _aligned_free(pMemory);
+ #else
+     free(pMemory);
+diff --git a/Shared/NoWindows.h b/Shared/NoWindows.h
+index eb2ab6f..ae9357e 100644
+--- a/Shared/NoWindows.h
++++ b/Shared/NoWindows.h
+@@ -37,6 +37,8 @@ typedef long                LRESULT;
+ #define _strnicmp strncasecmp
+ #define _wtoi(x) wcstol(x, NULL, 10)
+ #define _tcscat wcscat
++
++#include <wctype.h>
+ #define _totlower towlower
+ #define _totupper towupper
+ 
+@@ -49,4 +51,8 @@ typedef long                LRESULT;
+ 
+ }
+ 
++#define TRUE 1
++#define FALSE 0
++#define TCHAR char
++
+ #endif // #ifndef _WIN32
+diff --git a/Shared/SmartPtr.h b/Shared/SmartPtr.h
+index 12a50e9..d0cd654 100644
+--- a/Shared/SmartPtr.h
++++ b/Shared/SmartPtr.h
+@@ -1,5 +1,5 @@
+ #ifdef PLATFORM_LINUX
+-#include "SharedFiles/MPLinux.h"
++// #include "SharedFiles/MPLinux.h"
+ #endif
+ #pragma once
+ 
+-- 
+2.4.3
+
