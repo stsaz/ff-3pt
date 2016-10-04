@@ -1,6 +1,8 @@
 /** libz interface for FF.
 Simon Zolin, 2016 */
 
+#pragma once
+
 #include <stdlib.h>
 
 

@@ -1,6 +1,8 @@
 /** libvorbis, libvorbisenc interface for FF.
 Simon Zolin, 2016 */
 
+#pragma once
+
 #include <stdint.h>
 
 

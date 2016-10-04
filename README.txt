@@ -21,6 +21,10 @@ COMPRESSION:
 . xz-5.2.2 (liblzma)
 . zlib-1.2.8
 
+PICTURES:
+. jpeg-9b
+. png-1.6.24
+
 OTHER CODE:
 . crc/: Fast CRC32 from liblzma
 . vorbis/ogg-crc.h: CRC32 table for OGG page
@@ -42,3 +46,16 @@ or
 	make -rRf {FF3PT}/{LIB}/Makefile FF3PT={FF3PT} [OS=win COMPILER=mingw]
 
 4. Done, new .so or .dll binaries will be created in the current directory.
+
+
+---------------
+LICENSE
+---------------
+
+This repository contains copies of original and auto-generated code from 3rd party libraries.  This code is the property of their owners.  This code and binary/object files created using this code are licensed accordingly to the licenses of those libraries.
+
+All other code provided here is free for use in open-source and proprietary projects.
+You may distribute, redistribute, modify the whole code or the parts of it, just keep the original copyright statement inside the files.
+
+
+Simon Zolin <stsaz@yandex.ru>
