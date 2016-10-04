@@ -1,0 +1,34 @@
+# libz for FF
+# Simon Zolin, 2016
+
+OPT := SECTIONS
+DEBUG := 0
+include $(FF3PT)/makeconf
+
+CFLAGS += \
+	-I. \
+	-DNO_GZIP -D_LARGEFILE64_SOURCE=1
+
+ifneq ($(OS),win)
+CFLAGS += -fvisibility=default -DHAVE_HIDDEN
+endif
+
+SRC := adler32.c \
+	crc32.c \
+	deflate.c \
+	infback.c \
+	inffast.c \
+	inflate.c \
+	inftrees.c \
+	trees.c \
+	zutil.c
+OBJ := $(SRC:.c=.o)
+
+%.o: %.c $(wildcard ./*.h)
+	$(C) $(CFLAGS) $<  -o$@
+
+libz.a: $(OBJ)
+	$(AR) rcs $@ $(OBJ)
+
+clean:
+	rm -fv $(OBJ) libz.a
