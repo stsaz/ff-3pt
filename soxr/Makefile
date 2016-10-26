@@ -7,11 +7,11 @@ include $(FF3PT)/makeconf
 
 CFLAGS += \
 	-I. -Isrc -I$(FF3PT)/soxr \
-	-DNDEBUG -DSOXR_LIB \
+	-DNDEBUG -DSOXR_LIB -D_DEFAULT_SOURCE \
 	-Wconversion -Wall -W -pedantic -Wundef -Wcast-align -Wpointer-arith -Wno-long-long -Wnested-externs -Wmissing-prototypes -Wstrict-prototypes
 
 ifeq ($(OS),win)
-CFLAGS += -DSOXR_DLL -Dsoxr_EXPORTS
+CFLAGS += -DSOXR_DLL -Dsoxr_EXPORTS -D_USE_MATH_DEFINES
 else
 CFLAGS += -DSOXR_VISIBILITY
 endif

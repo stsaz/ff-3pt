@@ -43,7 +43,7 @@ or
 
 3. Build the library.
 
-	make -rRf {FF3PT}/{LIB}/Makefile FF3PT={FF3PT} [OS=win COMPILER=mingw]
+	make -rRf {FF3PT}/{LIB}/Makefile FF3PT={FF3PT} [OS=win CPREFIX=x86_64-w64-mingw32-]
 
 4. Done, new .so or .dll binaries will be created in the current directory.
 

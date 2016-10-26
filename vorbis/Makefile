@@ -11,8 +11,11 @@ CFLAGS += \
 	-Wall -Wextra
 LDFLAGS += -L$(FF3PT)/$(OS)-$(ARCH)
 
-ifneq ($(OS),win)
+ifeq ($(OS),linux)
 CFLAGS += -DHAVE_ALLOCA_H=1 -ffast-math
+
+else ifeq ($(OS),bsd)
+CFLAGS += -ffast-math
 endif
 
 SRC := \
