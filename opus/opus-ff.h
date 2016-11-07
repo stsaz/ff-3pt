@@ -35,7 +35,7 @@ EXP int opus_decode_init(opus_ctx **pc, opus_conf *conf);
 
 EXP void opus_decode_free(opus_ctx *c);
 
-#define OPUS_BUFLEN(rate)  (120 * (rate))
+#define OPUS_BUFLEN(rate)  (120 * (rate) / 1000)
 
 /** Decode one packet.
 @pcm: output samples.
