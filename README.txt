@@ -2,7 +2,7 @@
 3-PARTY LIBRARIES FOR FF
 ---------------
 
-In order to be used by FF all these libraries must be built in a specific way.  A library itself may have a different API that's easier to use and more suitable for FF.  Library's code may also contain modifications.  The functionality that's not used by FF is either removed or disabled; FF doesn't use the official include files.  The libraries aren't compatible with any applications that use the official builds, so to eliminate ambiguity the filenames of the binaries have "-ff" suffix, e.g. "libNAME-ff.so".  The only platforms supported are linux-amd64 and win-x64.
+In order to be used by FF all these libraries must be built in a specific way.  A library itself may have a different API that's easier to use and more suitable for FF.  Library's code may also contain modifications.  The functionality that's not used by FF is either removed or disabled; FF doesn't use the official include files.  The libraries aren't compatible with any applications that use the official builds, so to eliminate ambiguity the filenames of the binaries have "-ff" suffix, e.g. "libNAME-ff.so".
 
 AUDIO:
 . alac-rev2
@@ -43,7 +43,7 @@ or
 
 3. Build the library.
 
-	make -rRf {FF3PT}/{LIB}/Makefile FF3PT={FF3PT} [OS=win CPREFIX=x86_64-w64-mingw32-]
+	make -rRf {FF3PT}/{LIB}/Makefile FF3PT={FF3PT} [ARCH=i686] [OS=win CPREFIX=x86_64-w64-mingw32-]
 
 4. Done, new .so or .dll binaries will be created in the current directory.
 

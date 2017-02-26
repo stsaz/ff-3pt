@@ -91,3 +91,4 @@ int mpg123_decode(mpg123 *m, const char *data, size_t size, unsigned char **audi
 
 int parse_new_id3(mpg123_handle *fr, unsigned long first4bytes){}
 void do_equalizer(real *bandPtr,int channel, real equalizer[2][32]){}
+void do_equalizer_3dnow(real *bandPtr,int channel, real equalizer[2][32]){}

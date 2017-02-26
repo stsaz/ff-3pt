@@ -6,9 +6,13 @@ DEBUG := 0
 include $(FF3PT)/makeconf
 
 CFLAGS += -O3 \
+	-funroll-loops \
 	-I. -Isrc/libFLAC/include -Iinclude -I$(FF3PT)/flac \
-	-DHAVE_CONFIG_H -DFLAC_EXP \
-	-funroll-loops -Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return -Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations -Wunreachable-code -Winline  -Wdeclaration-after-statement -D_FORTIFY_SOURCE=2 -msse2 -Wextra -Wno-unused-function -Wno-unused-variable -Wno-unused-parameter
+	-DHAVE_CONFIG_H -DFLAC_EXP -D_FORTIFY_SOURCE=2 \
+	-Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return \
+	-Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations -Wunreachable-code \
+	-Winline -Wdeclaration-after-statement \
+	-Wno-unused-function -Wno-unused-variable -Wno-unused-parameter
 
 SRC := \
 	src/libFLAC/bitmath.c \

@@ -31,8 +31,16 @@ SRC := \
 	src/simd.c
 OBJ := $(SRC:.c=.o)
 
+all: libsoxr-ff.$(SO)
+
 %.o: %.c $(wildcard ./src/*.h)
 	$(C) $(CFLAGS) $<  -o$@
+
+src/simd.o: src/simd.c $(wildcard ./src/*.h)
+	$(C) $(CFLAGS) -msse $<  -o$@
+
+src/pffft32s.o: src/pffft32s.c $(wildcard ./src/*.h)
+	$(C) $(CFLAGS) -msse $<  -o$@
 
 libsoxr-ff.$(SO): $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -lm -shared -o$@

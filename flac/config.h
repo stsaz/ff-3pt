@@ -1,3 +1,12 @@
+#if defined __LP64__ || defined _WIN64
+/* define if building for x86_64 */
+#define FLAC__CPU_X86_64 1
+
+#else
+/* define if building for ia32/i386 */
+#define FLAC__CPU_IA32 1
+#endif
+
 #ifdef _WIN32
 #include "config-win.h"
 
@@ -18,9 +27,6 @@
 /* define to align allocated memory on 32-byte boundaries */
 #define FLAC__ALIGN_MALLOC_DATA 1
 
-/* define if building for ia32/i386 */
-/* #undef FLAC__CPU_IA32 */
-
 /* define if building for PowerPC */
 /* #undef FLAC__CPU_PPC */
 
@@ -29,9 +35,6 @@
 
 /* define if building for SPARC */
 /* #undef FLAC__CPU_SPARC */
-
-/* define if building for x86_64 */
-#define FLAC__CPU_X86_64 1
 
 /* define if you have docbook-to-man or docbook2man */
 /* #undef FLAC__HAS_DOCBOOK_TO_MAN */

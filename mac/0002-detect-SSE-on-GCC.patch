@@ -1,0 +1,47 @@
+From 530b07d3bdb34bf45b8ae6ce6f2b761313f5ce95 Mon Sep 17 00:00:00 2001
+From: Simon Zolin <stsaz@yandex.ru>
+Date: Thu, 23 Feb 2017 11:11:01 +0300
+Subject: [PATCH 2/3] detect SSE on GCC
+
+---
+ Shared/GlobalFunctions.cpp | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
+
+diff --git a/Shared/GlobalFunctions.cpp b/Shared/GlobalFunctions.cpp
+index 428da91..8ad919c 100644
+--- a/Shared/GlobalFunctions.cpp
++++ b/Shared/GlobalFunctions.cpp
+@@ -1,3 +1,4 @@
++#include <FFOS/cpu.h>
+ #include "All.h"
+ #include "GlobalFunctions.h"
+ #include "IO.h"
+@@ -113,22 +114,9 @@ bool GetMMXAvailable()
+ 
+ bool GetSSEAvailable()
+ {
+-    bool bSSE = false;
+-#ifdef _MSC_VER
+-    #define CPU_SSE2 (1 << 26)
+-
+-    int cpuInfo[4] = { 0 };
+-    __cpuid(cpuInfo, 0);
+-
+-    int nIds = cpuInfo[0];
+-    if (nIds >= 1)
+-    {
+-        __cpuid(cpuInfo, 1);
+-        if (cpuInfo[3] & CPU_SSE2)
+-			bSSE = true;
+-    }
+-#endif
+-    return bSSE;
++    ffcpuid c = {0};
++    ff_cpuid(&c, FFCPUID_FEATURES);
++    return ff_cpuid_feat(&c, FFCPUID_SSE2);
+ }
+ 
+ bool StringIsEqual(const str_utfn * pString1, const str_utfn * pString2, bool bCaseSensitive, int nCharacters)
+-- 
+2.7.4
+

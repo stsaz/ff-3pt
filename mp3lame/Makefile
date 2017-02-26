@@ -31,11 +31,16 @@ SRC := \
 	libmp3lame/vector/xmm_quantize_sub.c
 OBJ := lame-ff.o $(SRC:.c=.o)
 
+all: libmp3lame-ff.$(SO)
+
 %.o: $(FF3PT)/mp3lame/%.c
 	$(C) $(CFLAGS) $< -o$@
 
 %.o: %.c $(wildcard include/*.h) $(wildcard libmp3lame/*.h) $(wildcard libmp3lame/vector/*.h)
 	$(C) $(CFLAGS) $<  -o$@
+
+libmp3lame/vector/xmm_quantize_sub.o: libmp3lame/vector/xmm_quantize_sub.c $(wildcard include/*.h) $(wildcard libmp3lame/*.h) $(wildcard libmp3lame/vector/*.h)
+	$(C) $(CFLAGS) -msse $<  -o$@
 
 libmp3lame-ff.$(SO): $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@

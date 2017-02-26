@@ -6,7 +6,7 @@ DEBUG := 0
 include $(FF3PT)/makeconf
 
 CFLAGS += -O3 \
-	-DENABLE_SSE_ASSEMBLY -IShared -IMACLib -I$(FF3PT)/mac
+	-IShared -IMACLib -I$(FF3PT)/mac -I$(FF3PT)/../ffos
 
 ifeq ($(OS),win)
 CFLAGS += -DPLATFORM_WINDOWS -DWINVER=0x0400
@@ -26,11 +26,16 @@ SRC := \
 	Shared/GlobalFunctions.cpp
 OBJ := MAC-ff.o $(SRC:.cpp=.o)
 
+all: libMAC-ff.$(SO)
+
 %.o: $(FF3PT)/mac/%.cpp $(wildcard MACLib/*.h)
 	$(CXX)  $(CFLAGS) $<  -o$@
 
 %.o: %.cpp $(wildcard MACLib/*.h)
 	$(CXX)  $(CFLAGS) $<  -o$@
+
+MACLib/NNFilter.o: MACLib/NNFilter.cpp $(wildcard MACLib/*.h)
+	$(CXX)  $(CFLAGS) -msse2 $<  -o$@
 
 libMAC-ff.$(SO): $(OBJ)
 	$(LDXX) $(OBJ) $(LDFLAGS) -shared -o$@

@@ -7,7 +7,8 @@ include $(FF3PT)/makeconf
 
 CFLAGS += \
 	-I$(FF3PT)/wavpack \
-	-DWVPK_EXP -DOPT_ASM_X64=1 -DHAVE___BUILTIN_CLZ=1 -DHAVE___BUILTIN_CTZ=1 -I. -DVER4_ONLY -DNO_SEEKING -DNO_TAGS -DNO_USE_FSTREAMS
+	-DWVPK_EXP -DHAVE___BUILTIN_CLZ=1 -DHAVE___BUILTIN_CTZ=1 \
+	-DVER4_ONLY -DNO_SEEKING -DNO_TAGS -DNO_USE_FSTREAMS
 
 SRC := \
 	src/common_utils.c \
@@ -18,7 +19,16 @@ SRC := \
 	src/unpack.c \
 	src/unpack_floats.c \
 	src/unpack_utils.c
+
+ifeq ($(CPU),amd64)
+CFLAGS += -DOPT_ASM_X64=1
 SRC_AS := src/unpack_x64.s
+
+else
+CFLAGS += -DOPT_ASM_X86=1
+SRC_AS := src/unpack_x86.s
+endif
+
 OBJ := $(SRC:.c=.o)
 OBJ += $(SRC_AS:.s=.o)
 

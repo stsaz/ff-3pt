@@ -9,8 +9,8 @@ CFLAGS += \
 	-DHAVE_CONFIG_H -DOPUS_EXPORT= \
 	-I. -Iinclude -Icelt -Isilk -Isilk/float -I$(FF3PT)/opus \
 	-W -Wall -Wextra -Wcast-align -Wnested-externs -Wshadow -Wstrict-prototypes
-LDFLAGS += -L$(FF3PT)/$(OS)-$(ARCH) -lm
-CFLAGS_SSE41 := -msse4.1
+LDFLAGS += -lm
+CFLAGS_SSE += -msse -msse2 -msse4.1
 
 include ./celt_sources.mk
 include ./silk_sources.mk
@@ -27,10 +27,10 @@ OBJ := opus-ff.o $(SRC:.c=.o)
 	$(C) $(CFLAGS) -I$(FF3PT)/opus $< -o$@
 
 silk/x86/%.o: silk/x86/%.c
-	$(C) $(CFLAGS) $(CFLAGS_SSE41) $< -o$@
+	$(C) $(CFLAGS) $(CFLAGS_SSE) $< -o$@
 
 celt/x86/%.o: celt/x86/%.c
-	$(C) $(CFLAGS) $(CFLAGS_SSE41) $< -o$@
+	$(C) $(CFLAGS) $(CFLAGS_SSE) $< -o$@
 
 %.o: %.c
 	$(C) $(CFLAGS) $< -o$@

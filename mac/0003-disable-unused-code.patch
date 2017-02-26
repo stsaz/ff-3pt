@@ -1,4 +1,4 @@
-From a27d281836ac6295d28f929de9ee8bb6281af06d Mon Sep 17 00:00:00 2001
+From f6473fdb3790f996354376f238e8620a6efd0acb Mon Sep 17 00:00:00 2001
 From: Simon Zolin <stsaz@yandex.ru>
 Date: Mon, 20 Jun 2016 19:49:09 +0300
 Subject: [PATCH 3/3] disable unused code
@@ -14,7 +14,7 @@ Subject: [PATCH 3/3] disable unused code
  7 files changed, 49 insertions(+), 41 deletions(-)
 
 diff --git a/MACLib/APEDecompress.cpp b/MACLib/APEDecompress.cpp
-index 6f5b4ab..9dc357d 100644
+index 6f5b4ab..62aa676 100644
 --- a/MACLib/APEDecompress.cpp
 +++ b/MACLib/APEDecompress.cpp
 @@ -60,7 +60,7 @@ int CAPEDecompress::InitializeDecompressor()
@@ -142,7 +142,7 @@ index 6f5b4ab..9dc357d 100644
          if (m_nStoredCRC & 0x80000000) 
          {
 diff --git a/MACLib/APEDecompress.h b/MACLib/APEDecompress.h
-index cec9a64..da5af25 100644
+index cec9a64..2d272fa 100644
 --- a/MACLib/APEDecompress.h
 +++ b/MACLib/APEDecompress.h
 @@ -1,6 +1,6 @@
@@ -185,7 +185,7 @@ index cec9a64..da5af25 100644
  
  }
 diff --git a/MACLib/UnBitArray.cpp b/MACLib/UnBitArray.cpp
-index 366802c..f6c32e9 100644
+index 366802c..6227dca 100644
 --- a/MACLib/UnBitArray.cpp
 +++ b/MACLib/UnBitArray.cpp
 @@ -33,14 +33,15 @@ Construction
@@ -207,7 +207,7 @@ index 366802c..f6c32e9 100644
  
  unsigned int CUnBitArray::DecodeValue(DECODE_VALUE_METHOD DecodeMethod, int nParam1, int nParam2)
 diff --git a/MACLib/UnBitArrayBase.cpp b/MACLib/UnBitArrayBase.cpp
-index 3e2a7bb..80faac7 100644
+index 3e2a7bb..1de9a0a 100644
 --- a/MACLib/UnBitArrayBase.cpp
 +++ b/MACLib/UnBitArrayBase.cpp
 @@ -6,6 +6,7 @@
@@ -288,7 +288,7 @@ index 3e2a7bb..80faac7 100644
      return (m_pBitArray != NULL) ? 0 : ERROR_INSUFFICIENT_MEMORY;
  }
 diff --git a/MACLib/UnBitArrayBase.h b/MACLib/UnBitArrayBase.h
-index d4035a6..77bb678 100644
+index d4035a6..2528775 100644
 --- a/MACLib/UnBitArrayBase.h
 +++ b/MACLib/UnBitArrayBase.h
 @@ -27,8 +27,8 @@ public:
@@ -323,7 +323,7 @@ index d4035a6..77bb678 100644
  
  CUnBitArrayBase * CreateUnBitArray(IAPEDecompress * pAPEDecompress, int nVersion);
 diff --git a/Shared/All.h b/Shared/All.h
-index e55967e..93c5a51 100644
+index 386ec39..93981f5 100644
 --- a/Shared/All.h
 +++ b/Shared/All.h
 @@ -103,7 +103,7 @@ Global macros
@@ -336,7 +336,7 @@ index e55967e..93c5a51 100644
      #define MESSAGEBOX(PARENT, TEXT, CAPTION, TYPE)     ::MessageBox(PARENT, TEXT, CAPTION, TYPE)
      #define PUMP_MESSAGE_LOOP                           { MSG Msg; while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE) != 0) { TranslateMessage(&Msg); DispatchMessage(&Msg); } }
 diff --git a/Shared/CircleBuffer.h b/Shared/CircleBuffer.h
-index 9c6eef6..72b1e59 100644
+index 9c6eef6..6359b0b 100644
 --- a/Shared/CircleBuffer.h
 +++ b/Shared/CircleBuffer.h
 @@ -7,8 +7,8 @@ class CCircleBuffer
@@ -351,5 +351,5 @@ index 9c6eef6..72b1e59 100644
      // create the buffer
      void CreateBuffer(int nBytes, int nMaxDirectWriteBytes);
 -- 
-2.4.3
+2.7.4
 

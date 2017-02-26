@@ -10,6 +10,11 @@ CFLAGS += -fno-exceptions -fno-rtti \
 	-IlibAACenc/include -IlibMpegTPEnc/include -IlibSBRenc/include \
 	-IlibSYS/include -IlibFDK/include -IlibPCMutils/include
 
+ifeq ($(CPU),i686)
+CFLAGS += -Wno-narrowing
+# libAACenc/src/aacEnc_rom.cpp:661:1: error: narrowing conversion of ‘2180108801u’ from ‘unsigned int’ to ‘FIXP_DBL {aka long int}’ inside { } [-Wnarrowing]
+endif
+
 ifeq ($(OS),win)
 LDFLAGS += -static
 else

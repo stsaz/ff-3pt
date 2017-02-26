@@ -5,10 +5,10 @@ OPT := LTO3
 DEBUG := 0
 include $(FF3PT)/makeconf
 
-CFLAGS += \
+CFLAGS += -msse2 \
 	-I. -Isrc -Isrc/libmpg123 -I$(FF3PT)/mpg123 \
 	-DMPG123_EXP -DHAVE_CONFIG_H -DNO_ID3V2 -DNO_ICY -DNO_WARNING -DNO_ERRORMSG -DNO_ERETURN \
-	-DOPT_MULTI -DOPT_X86_64 -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT -DOPT_AVX \
+	-DOPT_MULTI -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT \
 	-fomit-frame-pointer -funroll-all-loops -finline-functions -ffast-math
 
 SRC := \
@@ -30,6 +30,10 @@ SRC := \
 	src/libmpg123/dither.c \
 	src/libmpg123/feature.c
 
+ifeq ($(CPU),amd64)
+
+CFLAGS += -DOPT_X86_64 -DOPT_AVX
+
 SRC_AS := \
 	src/libmpg123/getcpuflags_x86_64.S \
 	src/libmpg123/dct36_x86_64.S \
@@ -50,6 +54,42 @@ SRC_AS := \
 	src/libmpg123/synth_stereo_avx_float.S \
 	src/libmpg123/synth_stereo_avx_s32.S \
 	src/libmpg123/synth_stereo_avx.S
+
+else
+
+CFLAGS += \
+	-DOPT_I386 -DOPT_I586 -DOPT_I586_DITHER -DOPT_MMX \
+	-DOPT_3DNOW -DOPT_3DNOW_VINTAGE -DOPT_3DNOWEXT -DOPT_3DNOWEXT_VINTAGE \
+	-DOPT_SSE -DOPT_SSE_VINTAGE -DNOXFERMEM -DNEWOLD_WRITE_SAMPLE
+
+SRC += \
+	src/libmpg123/synth_8bit.c \
+	src/libmpg123/synth_s32.c \
+	src/libmpg123/synth_real.c
+
+SRC_AS := \
+	src/libmpg123/dct64_i386.S \
+	src/libmpg123/synth_i586.S \
+	src/libmpg123/synth_i586_dither.S \
+	src/libmpg123/dct64_mmx.S \
+	src/libmpg123/tabinit_mmx.S \
+	src/libmpg123/synth_mmx.S \
+	src/libmpg123/synth_3dnow.S \
+	src/libmpg123/dct64_3dnow.S \
+	src/libmpg123/dct36_3dnow.S \
+	src/libmpg123/dct64_3dnowext.S \
+	src/libmpg123/synth_3dnowext.S \
+	src/libmpg123/dct36_3dnowext.S \
+	src/libmpg123/dct64_sse_float.S \
+	src/libmpg123/synth_sse_float.S \
+	src/libmpg123/synth_stereo_sse_float.S \
+	src/libmpg123/synth_sse_s32.S \
+	src/libmpg123/synth_stereo_sse_s32.S \
+	src/libmpg123/dct36_sse.S \
+	src/libmpg123/dct64_sse.S \
+	src/libmpg123/synth_sse.S \
+	src/libmpg123/getcpuflags.S
+endif
 
 ifeq ($(OS),win)
 SRC += src/libmpg123/lfs_wrap.c

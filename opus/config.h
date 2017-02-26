@@ -142,11 +142,13 @@
 /* Define if binary requires AVX intrinsics support */
 /* #undef OPUS_X86_PRESUME_AVX */
 
+#if defined __LP64__ || defined _WIN64
 /* Define if binary requires SSE intrinsics support */
 #define OPUS_X86_PRESUME_SSE 1
 
 /* Define if binary requires SSE2 intrinsics support */
 #define OPUS_X86_PRESUME_SSE2 1
+#endif
 
 /* Define if binary requires SSE4.1 intrinsics support */
 /* #undef OPUS_X86_PRESUME_SSE4_1 */
