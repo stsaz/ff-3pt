@@ -1,14 +1,14 @@
-From b8217182ed431b1be6878370b0da4c04ace4ae64 Mon Sep 17 00:00:00 2001
+From c03312e4fe685b4ff89b80343dd874b82994ed2f Mon Sep 17 00:00:00 2001
 From: Simon Zolin <stsaz@yandex.ru>
-Date: Thu, 30 Jun 2016 21:21:00 +0300
-Subject: [PATCH 2/2] new encoder interface flac_encode()
+Date: Sat, 25 Feb 2017 10:58:48 +0300
+Subject: [PATCH 2/2] new encoder interface
 
 ---
- src/libFLAC/stream_encoder.c | 116 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 112 insertions(+), 4 deletions(-)
+ src/libFLAC/stream_encoder.c | 90 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 86 insertions(+), 4 deletions(-)
 
 diff --git a/src/libFLAC/stream_encoder.c b/src/libFLAC/stream_encoder.c
-index 45bdb25..555f004 100644
+index 45bdb25..a6a1462 100644
 --- a/src/libFLAC/stream_encoder.c
 +++ b/src/libFLAC/stream_encoder.c
 @@ -62,6 +62,7 @@
@@ -206,88 +206,62 @@ index 45bdb25..555f004 100644
  
  	/*
  	 * Get ready for the next frame
-@@ -4523,3 +4547,87 @@ FILE *get_binary_stdout_(void)
+@@ -4523,3 +4547,61 @@ FILE *get_binary_stdout_(void)
  
  	return stdout;
  }
 +
 +
-+struct flac_encoder {
-+	FLAC__StreamEncoder *encoder;
-+};
-+
-+int flac_encode_init(flac_encoder **pf, flac_conf *conf)
++int _flac_encode_init(FLAC__StreamEncoder *enc, flac_conf *conf)
 +{
-+	flac_encoder *f;
 +	int r;
 +
-+	if (NULL == (f = calloc(1, sizeof(flac_encoder))))
-+		return FLAC_ERR(FLAC_E_WSTATE, FLAC__STREAM_ENCODER_MEMORY_ALLOCATION_ERROR);
++	enc->protected_->bits_per_sample = conf->bps;
++	enc->protected_->channels = conf->channels;
++	enc->protected_->sample_rate = conf->rate;
++	enc->protected_->do_md5 = !conf->nomd5;
++	FLAC__stream_encoder_set_compression_level(enc, conf->level);
 +
-+	if (NULL == (f->encoder = FLAC__stream_encoder_new())) {
-+		free(f);
-+		return FLAC_ERR(FLAC_E_WSTATE, FLAC__STREAM_ENCODER_MEMORY_ALLOCATION_ERROR);
-+	}
-+
-+	f->encoder->protected_->bits_per_sample = conf->bps;
-+	f->encoder->protected_->channels = conf->channels;
-+	f->encoder->protected_->sample_rate = conf->rate;
-+	f->encoder->protected_->do_md5 = !conf->nomd5;
-+	FLAC__stream_encoder_set_compression_level(f->encoder, conf->level);
-+
-+	if (0 != (r = init_stream_internal_(f->encoder, NULL, NULL, NULL, NULL, NULL, NULL, 0))) {
++	if (0 != (r = init_stream_internal_(enc, NULL, NULL, NULL, NULL, NULL, NULL, 0))) {
 +		int e;
 +		if (r == FLAC__STREAM_ENCODER_INIT_STATUS_ENCODER_ERROR)
-+			e = FLAC_ERR(FLAC_E_WSTATE, f->encoder->protected_->state);
++			e = FLAC_ERR(FLAC_E_WSTATE, enc->protected_->state);
 +		else
 +			e = FLAC_ERR(FLAC_E_WINIT, r);
-+		flac_encode_free(f);
 +		return e;
 +	}
 +
-+	*pf = f;
 +	return 0;
 +}
 +
-+void flac_encode_free(flac_encoder *f)
++FLAC__StreamMetadata_StreamInfo* _flac_encode_info(FLAC__StreamEncoder *enc)
 +{
-+	FLAC__stream_encoder_delete(f->encoder);
-+	free(f);
++	return &enc->private_->streaminfo.data.stream_info;
 +}
 +
-+void flac_encode_info(flac_encoder *f, flac_conf *info)
-+{
-+	const FLAC__StreamMetadata_StreamInfo *si = &f->encoder->private_->streaminfo.data.stream_info;
-+	info->min_blocksize = si->min_blocksize;
-+	info->max_blocksize = si->max_blocksize;
-+	info->min_framesize = si->min_framesize;
-+	info->max_framesize = si->max_framesize;
-+	memcpy(info->md5, si->md5sum, sizeof(info->md5));
-+}
-+
-+int flac_encode(flac_encoder *f, const int * const *audio, unsigned int *samples, char **buf)
++int _flac_encode(FLAC__StreamEncoder *enc, const int * const *audio, unsigned int *samples, char **buf)
 +{
 +	int n;
-+
-+	if (*samples != 0) {
-+		n = FLAC__stream_encoder_process(f->encoder, audio, *samples);
-+		if (n == -1)
-+			return FLAC_ERR(FLAC_E_WSTATE, f->encoder->protected_->state);
-+
-+	} else {
-+		n = f->encoder->private_->current_sample_number;
-+		FLAC__stream_encoder_finish(f->encoder);
-+	}
-+
 +	const FLAC__byte *out_buffer;
 +	size_t bytes;
-+	if (!FLAC__bitwriter_get_buffer(f->encoder->private_->frame, &out_buffer, &bytes))
++
++	if (*samples != 0) {
++		n = FLAC__stream_encoder_process(enc, audio, *samples);
++		if (n == -1)
++			return FLAC_ERR(FLAC_E_WSTATE, enc->protected_->state);
++
++	} else {
++		n = enc->private_->current_sample_number;
++		FLAC__stream_encoder_finish(enc);
++	}
++
++	if (!FLAC__bitwriter_get_buffer(enc->private_->frame, &out_buffer, &bytes))
 +		return FLAC_ERR(FLAC_E_WSTATE, FLAC__STREAM_ENCODER_MEMORY_ALLOCATION_ERROR);
-+	FLAC__bitwriter_clear(f->encoder->private_->frame);
++	FLAC__bitwriter_clear(enc->private_->frame);
 +
 +	if (bytes != 0) {
-+		f->encoder->private_->streaminfo.data.stream_info.min_framesize = flac_min(bytes, f->encoder->private_->streaminfo.data.stream_info.min_framesize);
-+		f->encoder->private_->streaminfo.data.stream_info.max_framesize = flac_max(bytes, f->encoder->private_->streaminfo.data.stream_info.max_framesize);
++		enc->private_->streaminfo.data.stream_info.min_framesize = flac_min(bytes, enc->private_->streaminfo.data.stream_info.min_framesize);
++		enc->private_->streaminfo.data.stream_info.max_framesize = flac_max(bytes, enc->private_->streaminfo.data.stream_info.max_framesize);
 +	}
 +
 +	*buf = (void*)out_buffer;
@@ -295,5 +269,5 @@ index 45bdb25..555f004 100644
 +	return bytes;
 +}
 -- 
-2.4.3
+2.7.4
 

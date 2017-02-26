@@ -1,14 +1,14 @@
-From 630128ac158c645b5fe10ceba076ca7e1a13fe5c Mon Sep 17 00:00:00 2001
+From fe4f6ab09cebfa534ea474e02135492736727736 Mon Sep 17 00:00:00 2001
 From: Simon Zolin <stsaz@yandex.ru>
-Date: Tue, 21 Jun 2016 11:11:57 +0300
-Subject: [PATCH 1/2] new decoder interface flac_decode()
+Date: Sat, 25 Feb 2017 10:58:48 +0300
+Subject: [PATCH 1/2] new decoder interface
 
 + FLAC__bitreader_set()
 ---
- include/FLAC/export.h        |  13 +++++
- src/libFLAC/bitreader.c      |  31 +++++++++-
- src/libFLAC/stream_decoder.c | 134 ++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 174 insertions(+), 4 deletions(-)
+ include/FLAC/export.h        | 13 +++++++++
+ src/libFLAC/bitreader.c      | 31 +++++++++++++++++++--
+ src/libFLAC/stream_decoder.c | 66 +++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 106 insertions(+), 4 deletions(-)
 
 diff --git a/include/FLAC/export.h b/include/FLAC/export.h
 index 9cc9e13..33b9ac9 100644
@@ -119,7 +119,7 @@ index f61229b..cbc46fc 100644
  {
  	FLAC__ASSERT(0 != br);
 diff --git a/src/libFLAC/stream_decoder.c b/src/libFLAC/stream_decoder.c
-index 6632d31..53637b3 100644
+index 6632d31..50b7fda 100644
 --- a/src/libFLAC/stream_decoder.c
 +++ b/src/libFLAC/stream_decoder.c
 @@ -53,6 +53,7 @@
@@ -260,122 +260,54 @@ index 6632d31..53637b3 100644
  }
  
  FLAC__bool seek_to_absolute_sample_(FLAC__StreamDecoder *decoder, FLAC__uint64 stream_length, FLAC__uint64 target_sample)
-@@ -3387,3 +3407,115 @@ FLAC__bool file_eof_callback_(const FLAC__StreamDecoder *decoder, void *client_d
+@@ -3387,3 +3407,47 @@ FLAC__bool file_eof_callback_(const FLAC__StreamDecoder *decoder, void *client_d
  
  	return feof(decoder->private_->file)? true : false;
  }
 +
 +
-+extern const char * const FLAC__StreamEncoderStateString[];
-+extern const char * const FLAC__StreamEncoderInitStatusString[];
-+
-+const char* flac_errstr(int err)
-+{
-+	err = -err;
-+	int e = err & 0xff;
-+	switch ((err >> 8) & 0xff) {
-+	case FLAC_E_RINIT:
-+		return FLAC__StreamDecoderInitStatusString[e];
-+
-+	case FLAC_E_RSTATUS:
-+		return FLAC__StreamDecoderErrorStatusString[e];
-+
-+	case FLAC_E_RSTATE:
-+		return FLAC__StreamDecoderStateString[e];
-+
-+	case FLAC_E_WINIT:
-+		return FLAC__StreamEncoderInitStatusString[e];
-+
-+	case FLAC_E_WSTATE:
-+		return FLAC__StreamEncoderStateString[e];
-+	}
-+	return "unknown error";
-+}
-+
-+const char* flac_vendor(void)
-+{
-+	return FLAC__VENDOR_STRING;
-+}
-+
-+unsigned char flac_crc8(const char *data, unsigned int len)
-+{
-+	return FLAC__crc8((void*)data, len);
-+}
-+
-+
-+extern void FLAC__bitreader_set(FLAC__BitReader *br, const char *input, size_t len);
-+
-+
-+struct flac_decoder {
-+	FLAC__StreamDecoder *decoder;
-+};
-+
-+int flac_decode_init(flac_decoder **pf, flac_conf *conf)
++int _flac_decode_init(FLAC__StreamDecoder *d)
 +{
 +	int r;
-+	flac_decoder *f;
 +
-+	if (NULL == (f = calloc(1, sizeof(flac_decoder))))
-+		return FLAC_ERR(FLAC_E_RINIT, FLAC__STREAM_DECODER_INIT_STATUS_MEMORY_ALLOCATION_ERROR);
++	if (0 != (r = init_stream_internal_(d, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0)))
++		return r;
 +
-+	if (NULL == (f->decoder = FLAC__stream_decoder_new())) {
-+		free(f);
-+		return FLAC_ERR(FLAC_E_RINIT, FLAC__STREAM_DECODER_INIT_STATUS_MEMORY_ALLOCATION_ERROR);
-+	}
-+
-+	if (0 != (r = init_stream_internal_(f->decoder, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0))) {
-+		FLAC__stream_decoder_delete(f->decoder);
-+		free(f);
-+		return FLAC_ERR(FLAC_E_RINIT, r);
-+	}
-+
-+	f->decoder->private_->has_stream_info = true;
-+	FLAC__StreamMetadata_StreamInfo *si = &f->decoder->private_->stream_info.data.stream_info;
-+	memset(si, 0, sizeof(*si));
-+	si->min_blocksize = conf->min_blocksize;
-+	si->max_blocksize = conf->max_blocksize;
-+	si->bits_per_sample = conf->bps;
-+	si->channels = conf->channels;
-+	si->sample_rate = conf->rate;
-+
-+	*pf = f;
++	d->private_->has_stream_info = true;
 +	return 0;
 +}
 +
-+void flac_decode_free(flac_decoder *f)
++FLAC__StreamMetadata_StreamInfo* _flac_decode_info(FLAC__StreamDecoder *d)
 +{
-+	FLAC__stream_decoder_delete(f->decoder);
-+	free(f);
++	return &d->private_->stream_info.data.stream_info;
 +}
 +
-+int flac_decode(flac_decoder *f, const char *input, size_t len, const int ***output)
++extern void FLAC__bitreader_set(FLAC__BitReader *br, const char *input, size_t len);
++
++int _flac_decode(FLAC__StreamDecoder *d, const char *input, size_t len, const int ***output)
 +{
 +	FLAC__bool got_a_frame;
 +
-+	FLAC__bitreader_set(f->decoder->private_->input, input, len);
-+	f->decoder->private_->samples_decoded = 0;
-+	f->decoder->private_->estatus = -1;
-+	f->decoder->protected_->state = FLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC;
++	FLAC__bitreader_set(d->private_->input, input, len);
++	d->private_->samples_decoded = 0;
++	d->private_->estatus = -1;
++	d->protected_->state = FLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC;
 +
-+	if (!frame_sync_(f->decoder))
++	if (!frame_sync_(d))
 +		return FLAC_ERR(FLAC_E_RSTATUS, FLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC);
 +
-+	if (!read_frame_(f->decoder, &got_a_frame, 1)) {
-+		if (f->decoder->private_->estatus != -1)
-+			return FLAC_ERR(FLAC_E_RSTATUS, f->decoder->private_->estatus);
-+		return FLAC_ERR(FLAC_E_RSTATE, f->decoder->protected_->state);
++	if (!read_frame_(d, &got_a_frame, 1)) {
++		if (d->private_->estatus != -1)
++			return FLAC_ERR(FLAC_E_RSTATUS, d->private_->estatus);
++		return FLAC_ERR(FLAC_E_RSTATE, d->protected_->state);
 +	}
 +
 +	if (!got_a_frame)
 +		return FLAC_ERR(FLAC_E_RSTATUS, FLAC__STREAM_DECODER_ERROR_STATUS_LOST_SYNC);
 +
-+	*output = (const int **)f->decoder->private_->output;
++	*output = (const int **)d->private_->output;
 +	return 0;
 +}
-+
-+#ifdef _WIN32
-+FILE *fopen_utf8(const char *filename, const char *mode){}
-+#endif
 -- 
-2.4.3
+2.7.4
 

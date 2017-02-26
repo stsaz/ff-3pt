@@ -1,7 +1,7 @@
 /** libFLAC interface for FF.
 Simon Zolin, 2016 */
 
-#include <stdint.h>
+#include <stdlib.h>
 
 
 #ifdef WIN32

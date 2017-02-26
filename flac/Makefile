@@ -39,7 +39,7 @@ SRC := \
 	src/libFLAC/stream_encoder_intrin_avx2.c \
 	src/libFLAC/stream_encoder_framing.c \
 	src/libFLAC/window.c
-OBJ := $(SRC:.c=.o)
+OBJ := FLAC-ff.o $(SRC:.c=.o)
 
 %.o: $(FF3PT)/flac/%.c
 	$(C) $(CFLAGS) $<  -o$@
