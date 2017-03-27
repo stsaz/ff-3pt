@@ -6,7 +6,8 @@ DEBUG := 0
 include $(FF3PT)/makeconf
 
 CFLAGS += \
-	-Iinclude -Ilibmpcenc -Ilibmpcpsy -Ilibwavformat
+	-DMPC_API="" \
+	-I. -Iinclude -Ilibmpcenc -Ilibmpcpsy -Ilibwavformat
 LDFLAGS += -lm
 
 SRC_ENCLIB := \

@@ -16,7 +16,8 @@ typedef struct mpc_ctx mpc_ctx;
 typedef struct mpc_seekctx mpc_seekctx;
 
 enum {
-	MPC_ABUF_CAP = 36 * 32 * 4 * sizeof(float), // required capacity of output audio buffer
+	MPC_FRAME_SAMPLES = 36 * 32,
+	MPC_ABUF_CAP = MPC_FRAME_SAMPLES * 2 * sizeof(float), // required capacity of output audio buffer
 	MPC_FRAME_MAXSIZE = 4352, // max. frame size
 };
 

@@ -12,6 +12,7 @@ AUDIO:
 . MAC-416
 . mad-0.15.1b
 . mpg123-1.22.4
+. musepack-r475
 . ogg-1.3.2
 . soxr-0.1.2
 . vorbis-1.3.5

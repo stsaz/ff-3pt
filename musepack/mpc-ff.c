@@ -36,7 +36,9 @@ struct mpc_ctx {
 	mpc_streaminfo si;
 	unsigned int block_frames;
 	mpc_bits_reader br;
+	const char *bufptr;
 	size_t buflen;
+	char buffer[MAX_FRAME_SIZE];
 	unsigned int is_key_frame :1;
 };
 
@@ -74,8 +76,8 @@ void mpc_decode_free(mpc_ctx *c)
 
 void mpc_decode_input(mpc_ctx *c, const void *block, size_t len)
 {
-	c->br.buff = (void*)block;
 	c->br.count = 8;
+	c->bufptr = block;
 	c->buflen = len;
 	c->block_frames = 1 << c->si.block_pwr;
 	c->is_key_frame = 1;
@@ -91,12 +93,21 @@ int mpc_decode(mpc_ctx *c, float *pcm)
 		return 0;
 	}
 
+	/* Note: decoder may overread up to MAX_FRAME_SIZE bytes. */
+	if (c->buflen < MAX_FRAME_SIZE) {
+		memcpy(c->buffer, c->bufptr, c->buflen);
+		memset(c->buffer + c->buflen, 0, sizeof(c->buffer) - c->buflen);
+		c->br.buff = c->buffer;
+	} else
+		c->br.buff = (void*)c->bufptr;
+
 	const char *buf = c->br.buff;
 	mpc_frame_info fr;
 	fr.buffer = pcm;
 	fr.is_key_frame = c->is_key_frame;
 	c->is_key_frame = 0;
 	mpc_decoder_decode_frame(c->d, &c->br, &fr);
+	c->bufptr += (char*)c->br.buff - buf;
 	c->buflen -= (char*)c->br.buff - buf;
 	if ((ssize_t)c->buflen < 0)
 		return -MPC_EINCOMPLETE;
