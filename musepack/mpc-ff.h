@@ -13,6 +13,7 @@ Simon Zolin, 2017 */
 #endif
 
 typedef struct mpc_ctx mpc_ctx;
+typedef struct mpc_seekctx mpc_seekctx;
 
 enum {
 	MPC_ABUF_CAP = 36 * 32 * 4 * sizeof(float), // required capacity of output audio buffer
@@ -39,6 +40,17 @@ EXP void mpc_decode_input(mpc_ctx *c, const void *block, size_t len);
 @pcm: output samples.  Its size must be MPC_ABUF_CAP.
 Return the number of audio samples decoded;  0 if need next block;  <0 on error. */
 EXP int mpc_decode(mpc_ctx *c, float *pcm);
+
+
+/** Build seek table from ST block data.
+Return 0 on success;  <0: error. */
+EXP int mpc_seekinit(mpc_seekctx **pc, const void *sh_block, size_t sh_len, const void *st_block, size_t st_len);
+
+EXP void mpc_seekfree(mpc_seekctx *c);
+
+/** Get the nearest file offset by block number.
+Return file offset;  0 on error. */
+EXP long long mpc_seek(mpc_seekctx *c, unsigned int *blk);
 
 #ifdef __cplusplus
 }

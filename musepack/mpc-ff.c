@@ -3,6 +3,7 @@ Simon Zolin, 2017 */
 
 #include <mpc-ff.h>
 #include <mpc/mpcdec.h>
+#include <libmpcdec/internal.h>
 
 
 enum {
@@ -101,4 +102,63 @@ int mpc_decode(mpc_ctx *c, float *pcm)
 		return -MPC_EINCOMPLETE;
 	c->block_frames--;
 	return fr.samples;
+}
+
+
+struct mpc_seekctx {
+	mpc_demux demux;
+};
+
+extern mpc_status mpc_demux_ST(mpc_demux * d);
+
+int mpc_seekinit(mpc_seekctx **pc, const void *sh_block, size_t sh_len, const void *st_block, size_t st_len)
+{
+	mpc_seekctx *c;
+	mpc_demux *d;
+
+	if (sh_len > DEMUX_BUFFER_SIZE
+		|| st_len > DEMUX_BUFFER_SIZE)
+		return -MPC_EHDR;
+
+	if (NULL == (c = calloc(1, sizeof(mpc_seekctx))))
+		return -MPC_EMEM;
+	d = &c->demux;
+
+	memcpy(d->buffer, sh_block, sh_len);
+	d->bits_reader.buff = d->buffer;
+	d->bits_reader.count = 8;
+	if (0 != streaminfo_read_header_sv8(&d->si, &d->bits_reader, sh_len)) {
+		mpc_seekfree(c);
+		return -MPC_EHDR;
+	}
+
+	memcpy(d->buffer, st_block, st_len);
+	d->bits_reader.buff = d->buffer;
+	d->bits_reader.count = 8;
+	mpc_demux_ST(d);
+
+	*pc = c;
+	return 0;
+}
+
+void mpc_seekfree(mpc_seekctx *c)
+{
+	free(c->demux.seek_table);
+	free(c);
+}
+
+long long mpc_seek(mpc_seekctx *c, unsigned int *blk)
+{
+	mpc_demux *d = &c->demux;
+	uint64_t off;
+	unsigned int n = *blk;
+
+	n >>= d->seek_pwr - d->si.block_pwr;
+	if (n >= d->seek_table_size)
+		n = d->seek_table_size - 1;
+	off = d->seek_table[n] / 8;
+	n <<= d->seek_pwr - d->si.block_pwr;
+
+	*blk = n;
+	return off;
 }
