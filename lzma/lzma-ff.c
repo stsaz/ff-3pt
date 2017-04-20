@@ -34,10 +34,52 @@ const char* lzma_errstr(int e)
 struct lzma_decoder {
 	lzma_next_coder blk_dec;
 	lzma_block blk;
+
+	const lzma_coder_ctx *coder;
+	lzma_simple_coder simple_decoder;
+	char buf[8];
+	unsigned int nbuf;
+	char ctx[0];
 };
+
+extern const lzma_coder_ctx lzma_x86_ctx;
+
+static const lzma_coder_ctx* coders[] = {
+	&lzma_x86_ctx,
+};
+
+static const lzma_coder_ctx* find_coder(unsigned int method)
+{
+	for (unsigned int i = 0;  i != sizeof(coders) / sizeof(*coders);  i++) {
+		if (method == coders[i]->method)
+			return coders[i];
+	}
+	return NULL;
+}
 
 int lzma_decode_init(lzma_decoder **pdec, unsigned int check_method, const lzma_filter_props *fp, unsigned int nfilt)
 {
+	const lzma_coder_ctx *coder;
+
+	if (nfilt == 1 && NULL != (coder = find_coder(fp[0].id))) {
+
+		int r;
+		lzma_decoder *dec;
+		if (NULL == (dec = calloc(1, sizeof(lzma_decoder) + coder->ctxsize))) {
+			r = LZMA_MEM_ERROR;
+			goto err;
+		}
+		dec->simple_decoder = coder->simple_decoder;
+		dec->coder = coder;
+
+		*pdec = dec;
+		return 0;
+
+err:
+		free(dec);
+		return -r;
+	}
+
 	int r;
 	unsigned int i;
 
@@ -91,8 +133,63 @@ void lzma_decode_free(lzma_decoder *dec)
 	free(dec);
 }
 
+size_t lzma_decode_bufsize(lzma_decoder *dec, size_t in_bufsize)
+{
+	if (dec->coder != NULL)
+		return in_bufsize + dec->coder->max_unprocessed;
+	return in_bufsize;
+}
+
+static size_t ffmin(size_t a, size_t b)
+{
+	return (a < b) ? a : b;
+}
+
+/*
+. Copy stored input data to output buffer
+. Append input data to output buffer
+. Call coder
+. Store unprocessed input data
+*/
+static int call_simple_decoder(lzma_decoder *dec, const char *data, size_t *len, char *dst, size_t cap)
+{
+	size_t n, valid = 0, unprocessed;
+
+	if (cap < dec->nbuf)
+		return -LZMA_PROG_ERROR;
+	n = ffmin(dec->nbuf, cap);
+	memcpy(dst, dec->buf, n);
+	valid += n;
+
+	if (*len == (size_t)-1) {
+		if (dec->nbuf == 0)
+			return LZMA_DONE;
+		dec->nbuf = 0;
+		*len = 0;
+		return valid;
+	}
+
+	n = ffmin(*len, cap - valid);
+	memcpy(dst + valid, data, n);
+	valid += n;
+	*len = n;
+
+	n = dec->simple_decoder(dec->ctx, (void*)dst, valid);
+
+	unprocessed = valid - n;
+	if (unprocessed > sizeof(dec->buf))
+		return -LZMA_PROG_ERROR;
+	memcpy(dec->buf, dst + n, unprocessed);
+	dec->nbuf = unprocessed;
+
+	return n;
+}
+
 int lzma_decode(lzma_decoder *dec, const char *data, size_t *len, char *dst, size_t cap)
 {
+	if (dec->simple_decoder != NULL)
+		return call_simple_decoder(dec, data, len, dst, cap);
+
 	size_t inpos = 0, outpos = 0;
 	int r = dec->blk_dec.code(dec->blk_dec.coder, NULL
 		, (void*)data, &inpos, *len, (void*)dst, &outpos, cap

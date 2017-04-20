@@ -1,6 +1,8 @@
 /** liblzma interface for FF.
 Simon Zolin, 2016 */
 
+#pragma once
+
 #include <stdlib.h>
 
 
@@ -10,10 +12,25 @@ Simon Zolin, 2016 */
 #define EXP  __attribute__((visibility("default")))
 #endif
 
+typedef size_t (*lzma_simple_coder)(void *ctx, char *buf, size_t size);
+
+typedef struct lzma_coder_ctx {
+	unsigned int method;
+	unsigned int ctxsize;
+	unsigned int max_unprocessed;
+	lzma_simple_coder simple_decoder;
+} lzma_coder_ctx;
+
 typedef struct lzma_decoder lzma_decoder;
 
+enum LZMA_FILT {
+	LZMA_FILT_LZMA1 = 0x4000000000000001,
+	LZMA_FILT_LZMA2 = 0x21,
+	LZMA_FILT_X86 = 0x04,
+};
+
 typedef struct lzma_filter_props {
-	unsigned long long id;
+	unsigned long long id; //enum LZMA_FILT
 	unsigned long long prop_len;
 	const char *props;
 } lzma_filter_props;
@@ -36,6 +53,9 @@ Return 0 on success. */
 EXP int lzma_decode_init(lzma_decoder **dec, unsigned int check_method, const lzma_filter_props *fi, unsigned int nfilt);
 
 EXP void lzma_decode_free(lzma_decoder *dec);
+
+/** Get the best output buffer capacity. */
+EXP size_t lzma_decode_bufsize(lzma_decoder *dec, size_t in_bufsize);
 
 /** Decode 1 block.
 Return the number of bytes written;  0 if more data is needed;  enum LZMA_ERR on error. */
