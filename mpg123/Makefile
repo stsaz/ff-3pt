@@ -6,13 +6,12 @@ DEBUG := 0
 include $(FF3PT)/makeconf
 
 CFLAGS += -msse2 \
-	-I. -Isrc -Isrc/libmpg123 -I$(FF3PT)/mpg123 \
+	-I. -Isrc -Isrc/libmpg123 -I$(FF3PT)/mpg123 -Isrc/compat \
 	-DMPG123_EXP -DHAVE_CONFIG_H -DNO_ID3V2 -DNO_ICY -DNO_WARNING -DNO_ERRORMSG -DNO_ERETURN \
 	-DOPT_MULTI -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT \
 	-fomit-frame-pointer -funroll-all-loops -finline-functions -ffast-math
 
 SRC := \
-	src/libmpg123/compat.c \
 	src/libmpg123/parse.c \
 	src/libmpg123/frame.c \
 	src/libmpg123/format.c \
@@ -21,14 +20,12 @@ SRC := \
 	src/libmpg123/readers.c \
 	src/libmpg123/tabinit.c \
 	src/libmpg123/libmpg123.c \
-	src/libmpg123/stringbuf.c \
 	src/libmpg123/ntom.c \
 	src/libmpg123/synth.c  \
 	src/libmpg123/layer1.c \
 	src/libmpg123/layer2.c \
 	src/libmpg123/layer3.c \
-	src/libmpg123/dither.c \
-	src/libmpg123/feature.c
+	src/libmpg123/dither.c
 
 ifeq ($(CPU),amd64)
 
@@ -91,26 +88,24 @@ SRC_AS := \
 	src/libmpg123/getcpuflags.S
 endif
 
-ifeq ($(OS),win)
-SRC += src/libmpg123/lfs_wrap.c
-else
-SRC += src/libmpg123/lfs_alias.c
-endif
-
 OBJ := mpg123-ff.o $(SRC:.c=.o)
 OBJ += $(SRC_AS:.S=.o)
+
+libmpg123-ff.$(SO): $(OBJ)
+	$(LD) $(OBJ) $(LDFLAGS) -lm -shared -o$@
+
+src/libmpg123/mpg123.h: src/libmpg123/mpg123.h.in
+	cp -v $< $@
+	patch -p0 < $(FF3PT)/mpg123/mpg123.h.patch
 
 %.o: $(FF3PT)/mpg123/%.c
 	$(C) $(CFLAGS) $< -o$@
 
-%.o: %.c $(wildcard ./*.h)
+%.o: %.c $(wildcard ./*.h) src/libmpg123/mpg123.h
 	$(C) $(CFLAGS) $<  -o$@
 
 %.o: %.S $(wildcard ./*.h)
 	$(C) $(CFLAGS) $<  -o$@
-
-libmpg123-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libmpg123-ff.$(SO)

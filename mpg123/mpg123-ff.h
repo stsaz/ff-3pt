@@ -24,10 +24,12 @@ extern "C" {
 
 EXP const char* mpg123_errstr(int e);
 
+EXP int mpg123_init(void);
+
 /**
 @flags: enum MPG123_F.
 Return 0 on success. */
-EXP int mpg123_init(mpg123 **m, unsigned int flags);
+EXP int mpg123_open(mpg123 **m, unsigned int flags);
 
 EXP void mpg123_free(mpg123 *m);
 

@@ -7,9 +7,6 @@ Simon Zolin, 2016 */
 #include <frame.h>
 
 
-int _mpg123_init(void);
-
-
 #define ERR(r)  ((r > 0) ? -r : r - 1000)
 
 const char* mpg123_errstr(int e)
@@ -24,15 +21,13 @@ struct mpg123 {
 	unsigned int new_fmt :1;
 };
 
-int mpg123_init(mpg123 **pm, unsigned int flags)
+int mpg123_open(mpg123 **pm, unsigned int flags)
 {
 	int r;
 	mpg123 *m;
 
 	if (NULL == (m = calloc(1, sizeof(mpg123))))
 		return ERR(MPG123_OUT_OF_MEM);
-
-	_mpg123_init();
 
 	m->h = mpg123_new(NULL, &r);
 	if (r != MPG123_OK) {
@@ -92,3 +87,6 @@ int mpg123_decode(mpg123 *m, const char *data, size_t size, unsigned char **audi
 int parse_new_id3(mpg123_handle *fr, unsigned long first4bytes){}
 void do_equalizer(real *bandPtr,int channel, real equalizer[2][32]){}
 void do_equalizer_3dnow(real *bandPtr,int channel, real equalizer[2][32]){}
+int compat_open(const char *filename, int flags){return 0;}
+int compat_close(int infd){return 0;}
+void mpg123_free_string(mpg123_string* sb){}

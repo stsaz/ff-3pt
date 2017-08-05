@@ -11,7 +11,7 @@ AUDIO:
 . lame-3.99.5
 . MAC-416
 . mad-0.15.1b
-. mpg123-1.22.4
+. mpg123-1.25.3
 . musepack-r475
 . ogg-1.3.2
 . soxr-0.1.2

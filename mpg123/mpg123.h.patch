@@ -1,0 +1,40 @@
+--- src/libmpg123/mpg123.h.in	2017-07-18 10:18:46.000000000 +0300
++++ src/libmpg123/mpg123.h	2017-07-25 22:27:38.322495340 +0300
+@@ -17,7 +17,7 @@
+  * This should be incremented at least each time a new symbol is added
+  * to the header.
+  */
+-#define MPG123_API_VERSION @API_VERSION@
++#define MPG123_API_VERSION 41
+ 
+ #ifndef MPG123_EXPORT
+ /** Defines needed for MS Visual Studio(tm) DLL builds.
+@@ -49,8 +49,8 @@ typedef ptrdiff_t ssize_t;
+ #endif
+ 
+ #ifndef MPG123_NO_CONFIGURE /* Enable use of this file without configure. */
+-@INCLUDE_STDLIB_H@
+-@INCLUDE_SYS_TYPE_H@
++#include <stdlib.h>
++#include <sys/types.h>
+ 
+ /* Simplified large file handling.
+ 	I used to have a check here that prevents building for a library with conflicting large file setup
+@@ -540,7 +540,7 @@ MPG123_EXPORT int mpg123_getformat2( mpg
+  *  \param path filesystem path
+  *  \return MPG123_OK on success
+  */
+-MPG123_EXPORT int mpg123_open(mpg123_handle *mh, const char *path);
++MPG123_EXPORT int _mpg123_open(mpg123_handle *mh, const char *path);
+ 
+ /** Use an already opened file descriptor as the bitstream input
+  *  mpg123_close() will _not_ close the file descriptor.
+@@ -607,7 +607,7 @@ MPG123_EXPORT int mpg123_feed( mpg123_ha
+  *  \param done address to store the number of actually decoded bytes to
+  *  \return error/message code (watch out especially for MPG123_NEED_MORE)
+  */
+-MPG123_EXPORT int mpg123_decode( mpg123_handle *mh
++MPG123_EXPORT int _mpg123_decode( mpg123_handle *mh
+ ,	const unsigned char *inmemory, size_t inmemsize
+ ,	unsigned char *outmemory, size_t outmemsize, size_t *done );
+ 
