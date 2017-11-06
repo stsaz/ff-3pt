@@ -128,6 +128,21 @@ int fdkaac_decode(fdkaac_decoder *dec, const char *data, size_t len, short *pcm)
 	return si->frameSize;
 }
 
+int fdkaac_frameinfo(fdkaac_decoder *dec, fdkaac_info *info)
+{
+	const CStreamInfo *si = aacDecoder_GetStreamInfo(dec);
+	info->aot = AAC_LC;
+	info->channels = si->numChannels;
+	info->rate = si->sampleRate;
+	info->bitrate = si->bitRate;
+	if (si->flags & AC_SBR_PRESENT) {
+		info->aot = AAC_HE;
+		if (si->flags & AC_PS_PRESENT)
+			info->aot = AAC_HEV2;
+	}
+	return 0;
+}
+
 
 static const char* const enc_errs_20[] = {
 	"AACENC_INVALID_HANDLE: Handle passed to function call was invalid.",
@@ -236,6 +251,8 @@ int fdkaac_encode_create(fdkaac_encoder **penc, fdkaac_conf *conf)
 	conf->frame_samples = info.frameLength;
 	conf->max_frame_size = info.maxOutBufBytes;
 	conf->enc_delay = info.encoderDelay;
+	conf->quality = aacEncoder_GetParam(enc, AACENC_BITRATE);
+	conf->bandwidth = aacEncoder_GetParam(enc, AACENC_BANDWIDTH);
 
 	*penc = a;
 	return 0;

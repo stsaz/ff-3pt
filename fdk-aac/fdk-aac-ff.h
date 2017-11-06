@@ -36,6 +36,13 @@ typedef struct fdkaac_conf {
 	unsigned int conf_len;
 } fdkaac_conf;
 
+typedef struct fdkaac_info {
+	unsigned int aot; //enum AAC_AOT
+	unsigned int channels;
+	unsigned int rate;
+	unsigned int bitrate;
+} fdkaac_info;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,6 +58,9 @@ EXP void fdkaac_decode_free(fdkaac_decoder *dec);
 /**
 Return the number of decoded samples;  0 if more data is needed;  <0 on error. */
 EXP int fdkaac_decode(fdkaac_decoder *dec, const char *data, size_t len, short *pcm);
+
+/** Get frame information. */
+EXP int fdkaac_frameinfo(fdkaac_decoder *dec, fdkaac_info *info);
 
 
 EXP const char* fdkaac_encode_errstr(int e);
