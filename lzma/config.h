@@ -24,8 +24,10 @@
 /* Define to 1 if bswap_64 is available. */
 #define HAVE_BSWAP_64 1
 
+#if defined __linux__
 /* Define to 1 if you have the <byteswap.h> header file. */
 #define HAVE_BYTESWAP_H 1
+#endif
 
 /* Define to 1 if the system has the type `CC_SHA256_CTX'. */
 /* #undef HAVE_CC_SHA256_CTX */
