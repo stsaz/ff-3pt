@@ -1,0 +1,11 @@
+--- sqlite3.h	2017-10-17 18:54:39.148551107 +0300
++++ sqlite3.h	2017-10-17 19:07:44.434762826 +0300
+@@ -34,6 +34,8 @@
+ #define SQLITE3_H
+ #include <stdarg.h>     /* Needed for the definition of va_list */
+ 
++#include <sqlite-ff.h>
++
+ /*
+ ** Make sure we can call this stuff from C++.
+ */

@@ -26,6 +26,9 @@ PICTURES:
 . jpeg-9b
 . png-1.6.24
 
+DATABASE
+. sqlite-3.16.2
+
 OTHER CODE:
 . crc/: Fast CRC32 from liblzma
 . vorbis/ogg-crc.h: CRC32 table for OGG page
