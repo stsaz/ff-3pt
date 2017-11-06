@@ -13,7 +13,7 @@ CFLAGS += -DPLATFORM_WINDOWS -DWINVER=0x0400
 LDFLAGS += -static
 else
 CFLAGS += -DPLATFORM_LINUX
-LDFLAGS += -static-libgcc
+LDFLAGS += -static-libstdc++ -static-libgcc
 endif
 
 SRC := \

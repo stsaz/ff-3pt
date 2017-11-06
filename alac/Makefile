@@ -10,8 +10,9 @@ CFLAGS += -Icodec -Wall
 ifeq ($(OS),win)
 LDFLAGS += -static
 else
-LDFLAGS += -static-libgcc
+LDFLAGS += -static-libstdc++ -static-libgcc
 endif
+
 
 SRC_CPP := \
 	codec/ALACDecoder.cpp \

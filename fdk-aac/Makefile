@@ -18,7 +18,7 @@ endif
 ifeq ($(OS),win)
 LDFLAGS += -static
 else
-LDFLAGS += -static-libgcc
+LDFLAGS += -static-libstdc++ -static-libgcc
 endif
 
 AACDEC_SRC := \
