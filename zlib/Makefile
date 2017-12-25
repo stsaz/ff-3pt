@@ -32,5 +32,9 @@ OBJ := zlib-ff.o $(SRC:.c=.o)
 libz-ff.$(SO): $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
 
+OBJ_A := $(SRC:.c=.o) crc32.o
+libz.a: $(OBJ_A)
+	$(AR) rcs $@ $(OBJ_A)
+
 clean:
-	rm -fv $(OBJ) libz-ff.$(SO)
+	rm -fv $(OBJ) crc32.o libz-ff.$(SO) libz.a

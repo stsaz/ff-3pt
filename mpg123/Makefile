@@ -7,7 +7,7 @@ include $(FF3PT)/makeconf
 
 CFLAGS += -msse2 \
 	-I. -Isrc -Isrc/libmpg123 -I$(FF3PT)/mpg123 -Isrc/compat \
-	-DMPG123_EXP -DHAVE_CONFIG_H -DNO_ID3V2 -DNO_ICY -DNO_WARNING -DNO_ERRORMSG -DNO_ERETURN \
+	-DMPG123_SO -DMPG123_EXPORT="" -DHAVE_CONFIG_H -DNO_ID3V2 -DNO_ICY -DNO_WARNING -DNO_ERRORMSG -DNO_ERETURN \
 	-DOPT_MULTI -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT \
 	-fomit-frame-pointer -funroll-all-loops -finline-functions -ffast-math
 

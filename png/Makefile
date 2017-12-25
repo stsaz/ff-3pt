@@ -36,7 +36,7 @@ OBJ := png-ff.o $(SRC:.c=.o)
 	$(C) $(CFLAGS) $<  -o$@
 
 libpng-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) $(FF3PT)/$(OS)-$(ARCH)/libz.a -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(FF3PT)-bin/$(OS)-$(ARCH)/libz.a -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libpng-ff.$(SO)

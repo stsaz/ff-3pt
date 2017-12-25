@@ -1,4 +1,4 @@
---- src/libmpg123/mpg123.h.in	2017-07-18 10:18:46.000000000 +0300
+--- src/libmpg123/mpg123.h	2017-07-18 10:18:46.000000000 +0300
 +++ src/libmpg123/mpg123.h	2017-07-25 22:27:38.322495340 +0300
 @@ -17,7 +17,7 @@
   * This should be incremented at least each time a new symbol is added

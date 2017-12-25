@@ -12,7 +12,7 @@ Simon Zolin, 2016 */
 
 typedef struct mpg123 mpg123;
 
-#ifndef MPG123_EXP
+#ifndef MPG123_SO
 enum MPG123_F {
 	MPG123_FORCE_FLOAT = 0x400,
 };

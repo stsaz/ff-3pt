@@ -1,7 +1,11 @@
 /** libsqlite interface for FF.
 Simon Zolin, 2017 */
 
+#ifdef WIN32
+#define EXP  __declspec(dllexport)
+#else
 #define EXP  __attribute__((visibility("default")))
+#endif
 
 
 typedef struct sqlite3 sqlite3;
