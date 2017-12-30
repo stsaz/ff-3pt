@@ -22,6 +22,7 @@ typedef void (*sqlite3_destructor_type)(void*);
 typedef struct sqlite3 sqlite3;
 typedef struct sqlite3_stmt sqlite3_stmt;
 typedef long long int sqlite3_int64;
+typedef unsigned int uint;
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,6 +52,26 @@ EXP const unsigned char *sqlite3_column_text(sqlite3_stmt*, int iCol);
 EXP int sqlite3_column_type(sqlite3_stmt*, int iCol);
 EXP int sqlite3_finalize(sqlite3_stmt *pStmt);
 EXP int sqlite3_reset(sqlite3_stmt *pStmt);
+
+EXP int sqlite3_key_v2(sqlite3 *db, const char *zDbName, const void *pKey, int nKey);
+
+enum SQLITE3_CODEC_OP {
+	SQLITE3_CODEC_READ = 3, //in-place decryption is supported
+	SQLITE3_CODEC_WRITE = 6,
+	SQLITE3_CODEC_WRITE_JOURNAL = 7,
+};
+
+struct sqlite3_codec {
+	void* (*create)(const char *key, uint keylen);
+	void (*close)(void *c);
+	/** Encrypt/decrypt data.
+	@flags: enum SQLITE3_CODEC_OP.
+	Return output data. */
+	void* (*process)(void *c, void *data, uint page, uint page_size, uint flags);
+};
+
+/** Set data encryption interface. */
+EXP void sqlite3_codec(sqlite3 *db, const struct sqlite3_codec *codec);
 
 #ifdef __cplusplus
 }

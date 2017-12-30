@@ -10,17 +10,19 @@ include $(FF3PT)/makeconf
 
 CFLAGS += \
 	-I$(FF3PT)/sqlite -I. -I./src -I./ext/rtree -I./ext/icu -I./ext/fts3 -I./ext/async -I./ext/session \
-	-D_HAVE_SQLITE_CONFIG_H -DBUILD_sqlite -DNDEBUG -DSQLITE_THREADSAFE=1 -DSQLITE_TEMP_STORE=1 -DSQLITE_CORE \
+	-D_HAVE_SQLITE_CONFIG_H -DBUILD_sqlite -DNDEBUG -DSQLITE_THREADSAFE=1 -DSQLITE_TEMP_STORE=1 -DSQLITE_CORE -DSQLITE_HAS_CODEC \
 	-fPIC -DPIC
 
 ifeq ($(OS),win)
 CFLAGS += -DSQLITE_OS_WIN=1
 else
 CFLAGS += -DSQLITE_OS_UNIX=1
-LDFLAGS += -Wl,-no-undefined -ldl -lpthread
+LDFLAGS += -ldl -lpthread
 endif
 
-OBJ := \
+OBJ := sqlite-ff.o
+
+OBJ += \
 	src/alter.o \
 	src/analyze.o \
 	src/attach.o \
@@ -122,6 +124,8 @@ OBJ += \
 	parse.o \
 	opcodes.o
 
+%.o: $(FF3PT)/sqlite/%.c sqlite3.h $(wildcard ./*.h)
+	$(C) $(CFLAGS) $<  -o$@
 
 %.o: %.c sqlite3.h $(wildcard ./*.h)
 	$(C) $(CFLAGS) $<  -o$@
