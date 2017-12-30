@@ -38,7 +38,6 @@ SRC := ../common/tuklib_physmem.c \
 	./common/vli_encoder.c \
 	./common/hardware_cputhreads.c \
 	./common/outqueue.c \
-	./common/stream_encoder_mt.c \
 	./common/alone_decoder.c \
 	./common/auto_decoder.c \
 	./common/block_decoder.c \
