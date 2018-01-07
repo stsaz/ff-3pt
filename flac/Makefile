@@ -1,18 +1,21 @@
 # libFLAC for FF
 # Simon Zolin, 2016
 
-OPT := SECTIONS
+OPT := LTO3
 DEBUG := 0
 include $(FF3PT)/makeconf
 
-CFLAGS += -O3 \
+CFLAGS += \
 	-funroll-loops \
 	-I. -Isrc/libFLAC/include -Iinclude -I$(FF3PT)/flac \
 	-DHAVE_CONFIG_H -DFLAC_EXP -D_FORTIFY_SOURCE=2 \
-	-Wall -Wextra -Wstrict-prototypes -Wmissing-prototypes -Waggregate-return \
-	-Wcast-align -Wnested-externs -Wshadow -Wundef -Wmissing-declarations -Wunreachable-code \
+	-Wall -Wextra -Wstrict-prototypes -Waggregate-return \
+	-Wcast-align -Wnested-externs -Wshadow -Wundef -Wunreachable-code \
 	-Winline -Wdeclaration-after-statement \
-	-Wno-unused-function -Wno-unused-variable -Wno-unused-parameter
+	-Wno-unused-function -Wno-unused-variable -Wno-unused-parameter \
+	-Wno-implicit-fallthrough
+
+LDFLAGS += $(LD_LMATH)
 
 SRC := \
 	src/libFLAC/bitmath.c \

@@ -100,7 +100,7 @@ int flac_decode(flac_decoder *f, const char *input, size_t len, const int ***out
 }
 
 #ifdef _WIN32
-FILE *fopen_utf8(const char *filename, const char *mode){}
+FILE* flac_internal_fopen_utf8(const char *filename, const char *mode){}
 #endif
 
 

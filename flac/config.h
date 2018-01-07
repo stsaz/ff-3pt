@@ -24,8 +24,14 @@
 /* Target processor is little endian. */
 #define CPU_IS_LITTLE_ENDIAN 1
 
+/* Set FLAC__BYTES_PER_WORD to 8 (4 is the default) */
+#define ENABLE_64_BIT_WORDS 0
+
 /* define to align allocated memory on 32-byte boundaries */
 #define FLAC__ALIGN_MALLOC_DATA 1
+
+/* define if building for ia32/i386 */
+/* #undef FLAC__CPU_IA32 */
 
 /* define if building for PowerPC */
 /* #undef FLAC__CPU_PPC */
@@ -35,6 +41,9 @@
 
 /* define if building for SPARC */
 /* #undef FLAC__CPU_SPARC */
+
+/* define if building for x86_64 */
+/* #define FLAC__CPU_X86_64 1 */
 
 /* define if you have docbook-to-man or docbook2man */
 /* #undef FLAC__HAS_DOCBOOK_TO_MAN */
@@ -46,25 +55,22 @@
 #define FLAC__HAS_OGG 0
 
 /* Set to 1 if <x86intrin.h> is available. */
-#define FLAC__HAS_X86INTRIN 
+#define FLAC__HAS_X86INTRIN 1
 
 /* define to disable use of assembly code */
 /* #undef FLAC__NO_ASM */
-
-/* define if your operating system supports SSE instructions */
-#define FLAC__SSE_OS 1
 
 /* define if building for Darwin / MacOS X */
 /* #undef FLAC__SYS_DARWIN */
 
 /* define if building for Linux */
-/* #undef FLAC__SYS_LINUX */
+#define FLAC__SYS_LINUX 1
 
 /* define to enable use of Altivec instructions */
 #define FLAC__USE_ALTIVEC 1
 
-/* Define to 1 if `TIOCGWINSZ' requires <sys/ioctl.h>. */
-#define GWINSZ_IN_SYS_IOCTL 1
+/* define to enable use of AVX instructions */
+#define FLAC__USE_AVX 1
 
 /* Compiler has the __builtin_bswap16 intrinsic */
 #define HAVE_BSWAP16 1
@@ -74,6 +80,9 @@
 
 /* Define to 1 if you have the <byteswap.h> header file. */
 #define HAVE_BYTESWAP_H 1
+
+/* define if you have clock_gettime */
+#define HAVE_CLOCK_GETTIME 1
 
 /* Define to 1 if you have the <cpuid.h> header file. */
 #define HAVE_CPUID_H 1
@@ -123,6 +132,9 @@
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
 
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#define HAVE_SYS_IOCTL_H 1
+
 /* Define to 1 if you have the <sys/param.h> header file. */
 #define HAVE_SYS_PARAM_H 1
 
@@ -147,8 +159,7 @@
 /* Define as const if the declaration of iconv() needs const. */
 #define ICONV_CONST 
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
 
 /* Name of package */
@@ -161,7 +172,7 @@
 #define PACKAGE_NAME "flac"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "flac 1.3.1"
+#define PACKAGE_STRING "flac 1.3.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "flac"
@@ -170,7 +181,7 @@
 #define PACKAGE_URL "https://www.xiph.org/flac/"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.3.1"
+#define PACKAGE_VERSION "1.3.2"
 
 /* The size of `off_t', as computed by sizeof. */
 #define SIZEOF_OFF_T 8
@@ -204,7 +215,7 @@
 
 
 /* Version number of package */
-#define VERSION "1.3.1"
+#define VERSION "1.3.2"
 
 /* Target processor is big endian. */
 #define WORDS_BIGENDIAN 0
