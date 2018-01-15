@@ -52,6 +52,13 @@ CFLAGS += -ffunction-sections -fdata-sections
 LDFLAGS += -Wl,-gc-sections
 endif
 
+else ifeq ($(OPT),3)
+CFLAGS += -O3
+ifneq ($(OS),win)
+CFLAGS += -ffunction-sections -fdata-sections
+LDFLAGS += -Wl,-gc-sections
+endif
+
 else ifeq ($(OPT),LTO)
 CFLAGS += -O2 -flto -fno-asynchronous-unwind-tables
 LDFLAGS += -O2 -flto -fno-asynchronous-unwind-tables

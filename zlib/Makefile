@@ -11,6 +11,7 @@ CFLAGS += \
 
 ifneq ($(OS),win)
 CFLAGS += -DHAVE_HIDDEN
+# CFLAGS += -O3 -fvisibility=default
 endif
 
 SRC := adler32.c \
