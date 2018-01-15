@@ -1,15 +1,15 @@
 # libMAC for FF
 # Simon Zolin, 2016
 
-OPT := SECTIONS
+OPT := 3
 DEBUG := 0
 include $(FF3PT)/makeconf
 
-CFLAGS += -O3 \
+CFLAGS += \
 	-IShared -IMACLib -I$(FF3PT)/mac -I$(FF3PT)/../ffos
 
 ifeq ($(OS),win)
-CFLAGS += -DPLATFORM_WINDOWS -DWINVER=0x0400
+CFLAGS += -DPLATFORM_WINDOWS -DWINVER=0x0501
 LDFLAGS += -static
 else
 CFLAGS += -DPLATFORM_LINUX

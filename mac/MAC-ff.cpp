@@ -110,17 +110,20 @@ int ape_decode(ape_decoder *a, const char *data, size_t len, char *pcm, unsigned
 }
 
 
-#ifdef _WIN32
-int __stdcall FillWaveHeader(APE::WAVE_HEADER * pWAVHeader, int nAudioBytes, APE::WAVEFORMATEX * pWaveFormatEx, int nTerminatingBytes){}
+#include <CharacterHelper.h>
+
+APE::str_utf8 * APE::CAPECharacterHelper::GetUTF8FromUTF16(const APE::str_utfn * pUTF16){}
+
+int __stdcall FillWaveHeader(APE::WAVE_HEADER * pWAVHeader, APE::intn nAudioBytes, APE::WAVEFORMATEX * pWaveFormatEx, APE::intn nTerminatingBytes){}
 
 APE::intn APE::CAPEInfo::GetInfo(APE::APE_DECOMPRESS_FIELDS, APE::intn, APE::intn){}
 
-void APE::CCircleBuffer::CreateBuffer(int nBytes, int nMaxDirectWriteBytes){}
-int APE::CCircleBuffer::MaxAdd(){}
-int APE::CCircleBuffer::MaxGet(){}
-int APE::CCircleBuffer::Get(unsigned char * pBuffer, int nBytes){}
+APE::CCircleBuffer::CCircleBuffer(){}
+APE::CCircleBuffer::~CCircleBuffer(){}
+void APE::CCircleBuffer::CreateBuffer(APE::intn nBytes, APE::intn nMaxDirectWriteBytes){}
+APE::intn APE::CCircleBuffer::MaxAdd(){}
+APE::intn APE::CCircleBuffer::MaxGet(){}
+APE::intn APE::CCircleBuffer::Get(unsigned char * pBuffer, APE::intn nBytes){}
 void APE::CCircleBuffer::Empty(){}
-int APE::CCircleBuffer::RemoveHead(int nBytes){}
-int APE::CCircleBuffer::RemoveTail(int nBytes){}
-
-#endif
+APE::intn APE::CCircleBuffer::RemoveHead(APE::intn nBytes){}
+APE::intn APE::CCircleBuffer::RemoveTail(APE::intn nBytes){}
