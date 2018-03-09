@@ -6,6 +6,7 @@ In order to be used by FF all these libraries must be built in a specific way.  
 
 AUDIO:
 . alac-rev2
+. DynamicAudioNormalizer-2.10
 . fdk-aac-0.1.4
 . flac-1.3.2
 . lame-3.99.5
