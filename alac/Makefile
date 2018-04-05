@@ -10,7 +10,7 @@ CFLAGS += -Icodec -Wall
 ifeq ($(OS),win)
 LDFLAGS += -static
 else
-LDFLAGS += -static-libstdc++ -static-libgcc
+LDFLAGS += -static-libstdc++
 endif
 
 
@@ -36,6 +36,10 @@ OBJ := ALAC-ff.o $(SRC_CPP:.cpp=.o) $(SRC:.c=.o)
 
 %.o: %.cpp $(wildcard codec/*.h)
 	$(CXX) $(CFLAGS) $< -o$@
+
+all:
+	cat $(FF3PT)/alac/*.patch | patch -p1
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libALAC-ff.$(SO)
 
 libALAC-ff.$(SO): $(OBJ)
 	$(LDXX) $(OBJ) $(LDFLAGS) -shared -o$@

@@ -67,7 +67,9 @@ OBJ_ENC := $(SRC_ENC:.c=.o) $(SRC_COMM:.c=.o) $(SRC_ENCLIB:.c=.o) $(SRC_PSY:.c=.
 %.o: %.c $(wildcard lib/*.h)
 	$(C) $(CFLAGS) $< -o$@
 
-all: libmpc-ff.$(SO)
+all:
+	cat $(FF3PT)/musepack/*.patch | patch -p1
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libmpc-ff.$(SO)
 
 clean:
 	rm -fv $(OBJ) $(OBJ_ENC) $(OBJ_DEC) libmpc-ff.$(SO) mpcdec-bin mpcenc-bin

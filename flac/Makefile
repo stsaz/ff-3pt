@@ -50,6 +50,11 @@ OBJ := FLAC-ff.o $(SRC:.c=.o)
 %.o: %.c $(wildcard include/*.h) $(wildcard include/FLAC/*.h) $(wildcard src/libFLAC/include/private/*.h) $(wildcard src/libFLAC/include/protected/*.h)
 	$(C) $(CFLAGS) $<  -o$@
 
+all:
+	./configure
+	cat $(FF3PT)/flac/*.patch | patch -p1
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libFLAC-ff.$(SO)
+
 libFLAC-ff.$(SO): $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
 

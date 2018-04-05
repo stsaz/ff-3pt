@@ -21,8 +21,10 @@ SRC := \
 	src/unpack_utils.c
 
 ifeq ($(CPU),amd64)
+ifeq ($(CNAME),gcc)
 CFLAGS += -DOPT_ASM_X64=1
 SRC_AS := src/unpack_x64.s
+endif
 
 else
 CFLAGS += -DOPT_ASM_X86=1
@@ -31,6 +33,10 @@ endif
 
 OBJ := $(SRC:.c=.o)
 OBJ += $(SRC_AS:.s=.o)
+
+all:
+	cat $(FF3PT)/wavpack/*.patch | patch -p1
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libwavpack-ff.$(SO)
 
 %.o: %.c $(wildcard src/*.h)
 	$(C) $(CFLAGS) $<  -o$@

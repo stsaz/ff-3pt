@@ -7,7 +7,7 @@ include $(FF3PT)/makeconf
 
 CFLAGS += \
 	-DHAVE_CONFIG_H -DOPUS_EXPORT= \
-	-I. -Iinclude -Icelt -Isilk -Isilk/float -I$(FF3PT)/opus \
+	-I. -Iinclude -Icelt -Isilk -Isilk/float \
 	-W -Wall -Wextra -Wcast-align -Wnested-externs -Wshadow -Wstrict-prototypes
 LDFLAGS += -lm
 CFLAGS_SSE += -msse -msse2 -msse4.1
@@ -35,7 +35,9 @@ celt/x86/%.o: celt/x86/%.c
 %.o: %.c
 	$(C) $(CFLAGS) $< -o$@
 
-all: libopus-ff.$(SO)
+all:
+	./configure
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libopus-ff.$(SO)
 
 clean:
 	rm -fv $(OBJ) libopus-ff.$(SO)

@@ -9,7 +9,7 @@ CFLAGS += \
 	-Ilib -Iinclude -I$(FF3PT) \
 	-DUSE_MEMORY_H -DVORB_EXP \
 	-Wall -Wextra
-LDFLAGS += -L$(FF3PT)/$(OS)-$(ARCH)
+LDFLAGS += -L$(FF3PT)/_bin/$(OS)-$(ARCH) -lm
 
 ifeq ($(OS),linux)
 CFLAGS += -DHAVE_ALLOCA_H=1 -ffast-math
@@ -50,7 +50,9 @@ OBJ_ENC := vorbisenc-ff.o $(SRC_ENC:.c=.o)
 %.o: %.c $(wildcard lib/*.h)
 	$(C) $(CFLAGS) $< -o$@
 
-all: libvorbis-ff.$(SO) libvorbisenc-ff.$(SO)
+all:
+	cat $(FF3PT)/vorbis/*.patch | patch -p1
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libvorbis-ff.$(SO) libvorbisenc-ff.$(SO)
 
 clean:
 	rm -fv $(OBJ) $(OBJ_ENC) libvorbis-ff.$(SO) libvorbisenc-ff.$(SO)
@@ -58,5 +60,5 @@ clean:
 libvorbis-ff.$(SO): $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -shared -logg-ff -o$@
 
-libvorbisenc-ff.$(SO): $(OBJ_ENC)
+libvorbisenc-ff.$(SO): $(OBJ_ENC) libvorbis-ff.$(SO)
 	$(LD) $(OBJ_ENC) $(LDFLAGS) -shared -logg-ff -L. -lvorbis-ff  -o$@

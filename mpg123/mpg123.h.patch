@@ -1,25 +1,5 @@
---- src/libmpg123/mpg123.h	2017-07-18 10:18:46.000000000 +0300
-+++ src/libmpg123/mpg123.h	2017-07-25 22:27:38.322495340 +0300
-@@ -17,7 +17,7 @@
-  * This should be incremented at least each time a new symbol is added
-  * to the header.
-  */
--#define MPG123_API_VERSION @API_VERSION@
-+#define MPG123_API_VERSION 41
- 
- #ifndef MPG123_EXPORT
- /** Defines needed for MS Visual Studio(tm) DLL builds.
-@@ -49,8 +49,8 @@ typedef ptrdiff_t ssize_t;
- #endif
- 
- #ifndef MPG123_NO_CONFIGURE /* Enable use of this file without configure. */
--@INCLUDE_STDLIB_H@
--@INCLUDE_SYS_TYPE_H@
-+#include <stdlib.h>
-+#include <sys/types.h>
- 
- /* Simplified large file handling.
- 	I used to have a check here that prevents building for a library with conflicting large file setup
+--- a/src/libmpg123/mpg123.h	2017-07-18 10:18:46.000000000 +0300
++++ b/src/libmpg123/mpg123.h	2017-07-25 22:27:38.322495340 +0300
 @@ -540,7 +540,7 @@ MPG123_EXPORT int mpg123_getformat2( mpg
   *  \param path filesystem path
   *  \return MPG123_OK on success

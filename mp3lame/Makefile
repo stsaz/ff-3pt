@@ -6,7 +6,7 @@ DEBUG := 0
 include $(FF3PT)/makeconf
 
 CFLAGS += \
-	-DHAVE_CONFIG_H -I. -Iinclude -Ilibmp3lame -I$(FF3PT)/mp3lame \
+	-DHAVE_CONFIG_H -I. -Iinclude -Ilibmp3lame \
 	-ffast-math -funroll-loops -Wall
 
 SRC := \
@@ -31,10 +31,12 @@ SRC := \
 	libmp3lame/vector/xmm_quantize_sub.c
 OBJ := lame-ff.o $(SRC:.c=.o)
 
-all: libmp3lame-ff.$(SO)
+all:
+	./configure --disable-decoder
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libmp3lame-ff.$(SO)
 
 %.o: $(FF3PT)/mp3lame/%.c
-	$(C) $(CFLAGS) $< -o$@
+	$(C) $(CFLAGS) -I$(FF3PT)/mp3lame $< -o$@
 
 %.o: %.c $(wildcard include/*.h) $(wildcard libmp3lame/*.h) $(wildcard libmp3lame/vector/*.h)
 	$(C) $(CFLAGS) $<  -o$@
@@ -43,7 +45,7 @@ libmp3lame/vector/xmm_quantize_sub.o: libmp3lame/vector/xmm_quantize_sub.c $(wil
 	$(C) $(CFLAGS) -msse $<  -o$@
 
 libmp3lame-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) -shared -lm -o$@
 
 clean:
 	rm -fv $(OBJ) libmp3lame-ff.$(SO)

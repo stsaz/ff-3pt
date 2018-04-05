@@ -16,7 +16,7 @@ CFLAGS += -Wno-narrowing
 ifeq ($(OS),win)
 LDFLAGS += -static
 else
-LDFLAGS += -static-libstdc++ -static-libgcc
+LDFLAGS += -static-libstdc++
 endif
 
 AACDEC_SRC := \

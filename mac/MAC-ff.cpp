@@ -127,3 +127,5 @@ APE::intn APE::CCircleBuffer::Get(unsigned char * pBuffer, APE::intn nBytes){}
 void APE::CCircleBuffer::Empty(){}
 APE::intn APE::CCircleBuffer::RemoveHead(APE::intn nBytes){}
 APE::intn APE::CCircleBuffer::RemoveTail(APE::intn nBytes){}
+APE::CAPETag::~CAPETag(){}
+APE::CAPEInfo::~CAPEInfo(){}

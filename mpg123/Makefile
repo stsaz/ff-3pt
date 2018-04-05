@@ -8,11 +8,13 @@ include $(FF3PT)/makeconf
 CFLAGS += -msse2 \
 	-I. -Isrc -Isrc/libmpg123 -I$(FF3PT)/mpg123 -Isrc/compat \
 	-DMPG123_SO -DMPG123_EXPORT="" -DHAVE_CONFIG_H -DNO_ID3V2 -DNO_ICY -DNO_WARNING -DNO_ERRORMSG -DNO_ERETURN \
-	-DOPT_MULTI -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT \
+	-DOPT_MULTI -DOPT_GENERIC -DOPT_GENERIC_DITHER -DREAL_IS_FLOAT -DMPG123_NO_LARGENAME \
 	-fomit-frame-pointer -funroll-all-loops -finline-functions -ffast-math
 
 SRC := \
+	src/compat/compat_str.c \
 	src/libmpg123/parse.c \
+	src/libmpg123/index.c \
 	src/libmpg123/frame.c \
 	src/libmpg123/format.c \
 	src/libmpg123/dct64.c \
@@ -91,17 +93,22 @@ endif
 OBJ := mpg123-ff.o $(SRC:.c=.o)
 OBJ += $(SRC_AS:.S=.o)
 
+ifeq ($(OS),win)
+CONFIGURE_FLAGS := --host=x86_64-w64-mingw32
+endif
+
+all:
+	./configure $(CONFIGURE_FLAGS)
+	cat $(FF3PT)/mpg123/*.patch | patch -p1
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libmpg123-ff.$(SO)
+
 libmpg123-ff.$(SO): $(OBJ)
 	$(LD) $(OBJ) $(LDFLAGS) -lm -shared -o$@
-
-src/libmpg123/mpg123.h: src/libmpg123/mpg123.h.in
-	cp -v $< $@
-	patch -p0 < $(FF3PT)/mpg123/mpg123.h.patch
 
 %.o: $(FF3PT)/mpg123/%.c
 	$(C) $(CFLAGS) $< -o$@
 
-%.o: %.c $(wildcard ./*.h) src/libmpg123/mpg123.h
+%.o: %.c $(wildcard ./*.h)
 	$(C) $(CFLAGS) $<  -o$@
 
 %.o: %.S $(wildcard ./*.h)

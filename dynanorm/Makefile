@@ -12,7 +12,7 @@ CFLAGS += -O3 -Wall -std=gnu++11 -ffast-math -mfpmath=sse -msse -fomit-frame-poi
 ifeq ($(OS),win)
 LDFLAGS += -static
 else
-LDFLAGS += -static-libstdc++ -static-libgcc
+LDFLAGS += -static-libstdc++
 endif
 
 
