@@ -15,6 +15,8 @@ ifeq ($(uname),Linux)
 OS := linux
 else ifeq ($(uname),FreeBSD)
 OS := bsd
+else ifeq ($(uname),Darwin)
+OS := apple
 endif
 endif
 
@@ -54,7 +56,7 @@ endif
 
 else ifeq ($(OPT),3)
 CFLAGS += -O3
-ifneq ($(OS),win)
+ifeq ($(OS),linux)
 CFLAGS += -ffunction-sections -fdata-sections
 LDFLAGS += -Wl,-gc-sections
 endif
@@ -103,6 +105,15 @@ LDFLAGS += -Wl,-no-undefined
 CP := cp -v
 PACK := tar --uid=0 --gid=0 --numeric-owner -cJv -f
 
+else ifeq ($(OS),apple)
+SO := dylib
+C := clang
+LD := $(C)
+CXX := clang++
+LDXX := $(CXX)
+CP := cp -v
+PACK := tar -cJv -f
+
 endif
 
 endif #OS
@@ -144,7 +155,15 @@ endif #CPU
 
 # rule for separate .debug files
 %.debug: %
+ifeq ($(OS),apple)
+	# dsymutil $< -o $@
+	$(STRIP) -u -r $<
+
+else
+
 	$(OBJCOPY) --only-keep-debug $< $@
 	$(STRIP) $<
 	$(OBJCOPY) --add-gnu-debuglink=$@ $<
+endif
+
 	touch $@
