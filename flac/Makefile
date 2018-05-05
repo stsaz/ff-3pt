@@ -51,7 +51,7 @@ OBJ := FLAC-ff.o $(SRC:.c=.o)
 	$(C) $(CFLAGS) $<  -o$@
 
 all:
-	./configure
+	./configure --disable-ogg
 	cat $(FF3PT)/flac/*.patch | patch -p1
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libFLAC-ff.$(SO)
 
