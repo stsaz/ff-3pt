@@ -43,4 +43,4 @@ clean:
 	rm -fv $(OBJ) libopus-ff.$(SO)
 
 libopus-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@

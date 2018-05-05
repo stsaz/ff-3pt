@@ -113,6 +113,7 @@ CXX := clang++
 LDXX := $(CXX)
 CP := cp -v
 PACK := tar -cJv -f
+LD_INSTNAME_LDRPATH = -Wl,-install_name -Wl,@loader_path/$@
 
 endif
 

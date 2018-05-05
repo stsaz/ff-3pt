@@ -42,7 +42,7 @@ Source/MACLib/NNFilter.o: Source/MACLib/NNFilter.cpp $(wildcard Source/MACLib/*.
 	$(CXX)  $(CFLAGS) -msse2 $<  -o$@
 
 libMAC-ff.$(SO): $(OBJ)
-	$(LDXX) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LDXX) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 
 MAC_SRC := \

@@ -45,7 +45,7 @@ libmp3lame/vector/xmm_quantize_sub.o: libmp3lame/vector/xmm_quantize_sub.c $(wil
 	$(C) $(CFLAGS) -msse $<  -o$@
 
 libmp3lame-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -lm -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -lm -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libmp3lame-ff.$(SO)

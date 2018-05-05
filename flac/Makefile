@@ -56,7 +56,7 @@ all:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libFLAC-ff.$(SO)
 
 libFLAC-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libFLAC-ff.$(SO)

@@ -131,7 +131,7 @@ OBJ += \
 	$(C) $(CFLAGS) $<  -o$@
 
 libsqlite3-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 sqlite3.h:
 	make -f main.mk lemon TOP=. BCC=gcc

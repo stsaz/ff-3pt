@@ -165,7 +165,7 @@ OBJ += $(SRC:.cpp=.o)
 	$(CXX) $(CFLAGS) $< -o$@
 
 libfdk-aac-ff.$(SO): $(OBJ)
-	$(LDXX) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LDXX) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libfdk-aac-ff.$(SO)

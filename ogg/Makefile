@@ -18,7 +18,7 @@ OBJ := $(SRC:.c=.o)
 	$(C) $(CFLAGS) $< -o$@
 
 libogg-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libogg-ff.$(SO)

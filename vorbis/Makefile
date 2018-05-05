@@ -58,7 +58,7 @@ clean:
 	rm -fv $(OBJ) $(OBJ_ENC) libvorbis-ff.$(SO) libvorbisenc-ff.$(SO)
 
 libvorbis-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -logg-ff -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -logg-ff -shared -o$@
 
 libvorbisenc-ff.$(SO): $(OBJ_ENC) libvorbis-ff.$(SO)
-	$(LD) $(OBJ_ENC) $(LDFLAGS) -shared -logg-ff -L. -lvorbis-ff  -o$@
+	$(LD) $(OBJ_ENC) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -logg-ff -L. -lvorbis-ff -shared -o$@

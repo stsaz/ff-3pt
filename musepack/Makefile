@@ -78,7 +78,7 @@ clean:
 	$(C) $(CFLAGS) -I$(FF3PT)/musepack $< -o$@
 
 libmpc-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) -shared $(LDFLAGS) -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 mpcdec-bin: $(OBJ_DEC)
 	$(LD) $(OBJ_DEC) $(LDFLAGS) -o$@

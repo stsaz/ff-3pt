@@ -50,7 +50,7 @@ src/util64s.o: src/util64s.c $(wildcard ./src/*.h)
 	$(C) $(CFLAGS) -mavx $<  -o$@
 
 libsoxr-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -lm -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -lm -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libsoxr-ff.$(SO)

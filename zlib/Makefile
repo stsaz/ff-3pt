@@ -31,7 +31,7 @@ OBJ := zlib-ff.o $(SRC:.c=.o)
 	$(C) $(CFLAGS) $<  -o$@
 
 libz-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 OBJ_A := $(SRC:.c=.o) crc32.o
 libz.a: $(OBJ_A)

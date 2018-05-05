@@ -64,7 +64,7 @@ OBJ := jpeg-ff.o $(SRC:.c=.o)
 	$(C) $(CFLAGS) $<  -o$@
 
 libjpeg-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libjpeg-ff.$(SO)

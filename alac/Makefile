@@ -42,7 +42,7 @@ all:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libALAC-ff.$(SO)
 
 libALAC-ff.$(SO): $(OBJ)
-	$(LDXX) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LDXX) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libALAC-ff.$(SO)

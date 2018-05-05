@@ -30,7 +30,7 @@ OBJ := DynamicAudioNormalizer-ff.o $(SRC_CPP:.cpp=.o)
 	$(CXX) $(CFLAGS) $< -o$@
 
 libdynanorm-ff.$(SO): $(OBJ)
-	$(LDXX) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LDXX) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libdynanorm-ff.$(SO)

@@ -103,7 +103,7 @@ all:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) libmpg123-ff.$(SO)
 
 libmpg123-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -lm -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -lm -shared -o$@
 
 %.o: $(FF3PT)/mpg123/%.c
 	$(C) $(CFLAGS) $< -o$@

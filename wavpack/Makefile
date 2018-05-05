@@ -45,7 +45,7 @@ all:
 	$(C) $(CFLAGS) $<  -o$@
 
 libwavpack-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) libwavpack-ff.$(SO)

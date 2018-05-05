@@ -94,7 +94,7 @@ OBJ := lzma-ff.o $(SRC:.c=.o)
 	$(C) $(CFLAGS) $<  -o$@
 
 liblzma-ff.$(SO): $(OBJ)
-	$(LD) $(OBJ) $(LDFLAGS) -shared -o$@
+	$(LD) $(OBJ) $(LDFLAGS) $(LD_INSTNAME_LDRPATH) -shared -o$@
 
 clean:
 	rm -fv $(OBJ) liblzma-ff.$(SO)
