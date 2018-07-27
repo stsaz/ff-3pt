@@ -3,5 +3,9 @@
 FF3PT_CFLAGS ?= -c -O3
 FF3PT_CFLAGS += -Werror -Wall -Wextra
 
+$(FF_OBJ_DIR)/%.o: $(FF3PT)/base64/%.c
+	$(C) $(FF3PT_CFLAGS) $< -o$@
 $(FF_OBJ_DIR)/%.o: $(FF3PT)/crc/%.c
+	$(C) $(FF3PT_CFLAGS) $< -o$@
+$(FF_OBJ_DIR)/%.o: $(FF3PT)/sha1/%.c
 	$(C) $(FF3PT_CFLAGS) $< -o$@
