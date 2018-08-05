@@ -4,6 +4,7 @@ Simon Zolin, 2018 */
 
 #include <inttypes.h>
 #include <stdint.h>
+#include <stdlib.h>
 typedef unsigned char u_char;
 
 #ifdef WIN32

@@ -38,6 +38,8 @@ DATABASE
 OTHER CODE:
 * crc/: Fast CRC32 from liblzma
 * ogg/ogg-crc.h: CRC32 table for OGG page
+* sha1/: SHA-1 generator from nginx
+* base64/: Base64 encoder from nginx
 
 ---------------
 HOWTO BUILD
