@@ -131,7 +131,7 @@ $(SRCDIR)/libvorbis-$(VORBIS_VER).tar.xz:
 	cd $(SRCDIR) && $(DL) -O http://downloads.xiph.org/releases/vorbis/libvorbis-$(VORBIS_VER).tar.xz
 $(BUILDDIR)/libvorbis-$(VORBIS_VER): $(SRCDIR)/libvorbis-$(VORBIS_VER).tar.xz
 	$(UNTAR_XZ) $(SRCDIR)/libvorbis-$(VORBIS_VER).tar.xz -C $(BUILDDIR)
-vorbis: $(BUILDDIR)/libvorbis-$(VORBIS_VER)
+vorbis: $(BUILDDIR)/libvorbis-$(VORBIS_VER) ogg
 	$(MAKE) -f $(FF3PT)/vorbis/Makefile -C $(BUILDDIR)/libvorbis-$(VORBIS_VER)
 	$(COPY) $(BUILDDIR)/libvorbis-$(VORBIS_VER)/*.$(SO) $(BINDIR)
 

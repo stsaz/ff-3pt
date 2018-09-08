@@ -5,11 +5,8 @@ OPT := LTO3
 DEBUG := 0
 include $(FF3PT)/makeconf
 
-CFLAGS += -Iinclude -I$(FF3PT)
-
-ifneq ($(OS),win)
-CFLAGS += -fvisibility=default
-endif
+CFLAGS += -Iinclude -I$(FF3PT) \
+	-fvisibility=default
 
 SRC := src/bitwise.c
 OBJ := $(SRC:.c=.o)

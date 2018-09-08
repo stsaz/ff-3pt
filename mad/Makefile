@@ -11,9 +11,8 @@ CFLAGS += \
 
 ifeq ($(OS),win)
 CFLAGS += -DDLL_EXPORT
-else
-CFLAGS += -fvisibility=default
 endif
+CFLAGS += -fvisibility=default
 
 SRC := \
 	bit.c \

@@ -8,7 +8,7 @@ include $(FF3PT)/makeconf
 CFLAGS += \
 	-DHAVE_CONFIG_H -I. -I./api -I./common -I./check -I./lz -I./rangecoder -I./lzma -I./delta -I./simple -I../common -I$(FF3PT)/lzma \
 	-DTUKLIB_SYMBOL_PREFIX=lzma_ \
-	-pthread -fvisibility=hidden -Wall -Wextra -Wvla -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wwrite-strings -Wlogical-op -Waggregate-return -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wmissing-noreturn -Wredundant-decls
+	-pthread -Wall -Wextra -Wvla -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-aliasing -Wfloat-equal -Wundef -Wshadow -Wpointer-arith -Wbad-function-cast -Wwrite-strings -Wlogical-op -Waggregate-return -Wstrict-prototypes -Wold-style-definition -Wmissing-prototypes -Wmissing-declarations -Wmissing-noreturn -Wredundant-decls
 
 SRC := ../common/tuklib_physmem.c \
 	../common/tuklib_cpucores.c \
