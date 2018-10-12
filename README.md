@@ -34,6 +34,7 @@ PICTURES:
 
 DATABASE
 * sqlite-3.16.2
+* postgresql-9.2.4-1
 
 OTHER CODE:
 * crc/: Fast CRC32 from liblzma
