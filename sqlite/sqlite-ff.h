@@ -10,6 +10,7 @@ Simon Zolin, 2017 */
 
 #define SQLITE_OPEN_READONLY         0x00000001  /* Ok for sqlite3_open_v2() */
 #define SQLITE_OPEN_READWRITE        0x00000002  /* Ok for sqlite3_open_v2() */
+#define SQLITE_OPEN_CREATE           0x00000004  /* Ok for sqlite3_open_v2() */
 
 #define SQLITE_OK           0   /* Successful result */
 #define SQLITE_ROW         100  /* sqlite3_step() has another row ready */
