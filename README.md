@@ -77,6 +77,10 @@ Build on Linux for Windows:
 
 	make OS=win CPREFIX=x86_64-w64-mingw32- {LIB_NAME}
 
+Build on Linux for Windows 32-bit:
+
+	make OS=win CPREFIX=i686-w64-mingw32- ARCH=i686 {LIB_NAME}
+
 For example, this command executes all the steps described above.  It builds libFLAC binary and copies it into `./_bin/linux-amd64/libFLAC-ff.so`:
 
 	make

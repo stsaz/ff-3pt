@@ -15,16 +15,19 @@ SRCDIR := $(FF3PT)/_src
 BUILDDIR := /tmp/ff3pt-build
 BINDIR := $(FF3PT)/_bin/$(OS)-$(ARCH)
 ALIBS := alac dynanorm fdk-aac flac lame mac mpg123 musepack ogg opus soxr vorbis wavpack
+PLIBS := jpeg png
 
 
 help:
 	mkdir -p $(SRCDIR) $(BUILDDIR) $(BINDIR)
-	@echo Specify the library to build: $(ALIBS)
+	@echo Specify the library to build: $(ALIBS) $(PLIBS)
 
-.PHONY: $(ALIBS)
+.PHONY: $(ALIBS) $(PLIBS)
 
 package:
 	$(TAR_XZ) _bin/$(OS)-$(ARCH)-$(VER).tar.xz -C _bin $(OS)-$(ARCH)
+
+# AUDIO
 
 $(SRCDIR)/alac-master.zip:
 	cd $(SRCDIR) && $(DL) -o alac-master.zip https://github.com/macosforge/alac/archive/master.zip
@@ -143,3 +146,25 @@ $(BUILDDIR)/wavpack-$(WAVPACK_VER): $(SRCDIR)/wavpack-$(WAVPACK_VER).tar.bz2
 wavpack: $(BUILDDIR)/wavpack-$(WAVPACK_VER)
 	$(MAKE) -f $(FF3PT)/wavpack/Makefile -C $(BUILDDIR)/wavpack-$(WAVPACK_VER)
 	$(COPY) $(BUILDDIR)/wavpack-$(WAVPACK_VER)/*.$(SO) $(BINDIR)
+
+
+# PIC
+
+JPEG_VER := v9b
+JPEG_VER2 := 9b
+$(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz:
+	cd $(SRCDIR) && $(DL) -O http://www.ijg.org/files/jpegsrc.$(JPEG_VER).tar.gz
+$(BUILDDIR)/jpeg-$(JPEG_VER2): $(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz
+	$(UNTAR_GZ) $(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz -C $(BUILDDIR)
+jpeg: $(BUILDDIR)/jpeg-$(JPEG_VER2)
+	$(MAKE) -f $(FF3PT)/jpeg/Makefile -C $(BUILDDIR)/jpeg-$(JPEG_VER2)
+	$(COPY) $(BUILDDIR)/jpeg-$(JPEG_VER2)/*.$(SO) $(BINDIR)
+
+PNG_VER := 1.6.35
+$(SRCDIR)/libpng-$(PNG_VER).tar.xz:
+	cd $(SRCDIR) && $(DL) -O https://download.sourceforge.net/libpng/libpng-$(PNG_VER).tar.xz
+$(BUILDDIR)/libpng-$(PNG_VER): $(SRCDIR)/libpng-$(PNG_VER).tar.xz
+	$(UNTAR_XZ) $(SRCDIR)/libpng-$(PNG_VER).tar.xz -C $(BUILDDIR)
+png: $(BUILDDIR)/libpng-$(PNG_VER)
+	$(MAKE) -f $(FF3PT)/png/Makefile -C $(BUILDDIR)/libpng-$(PNG_VER)
+	$(COPY) $(BUILDDIR)/libpng-$(PNG_VER)/*.$(SO) $(BINDIR)
