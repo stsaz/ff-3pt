@@ -110,6 +110,7 @@ struct png_reader {
 	unsigned int state;
 	unsigned int line;
 	unsigned int height;
+	unsigned int npasses;
 	ffstr in;
 	ffarr inbuf;
 
@@ -167,8 +168,8 @@ int png_open(struct png_reader **pp, const void *data, size_t *len, struct png_c
 
 	png_read_info(p->png, p->pnginfo);
 
-	int color;
-	png_get_IHDR(p->png, p->pnginfo, &conf->width, &conf->height, NULL, &color, NULL, NULL, NULL);
+	int bits, color, ilace;
+	png_get_IHDR(p->png, p->pnginfo, &conf->width, &conf->height, &bits, &color, &ilace, NULL, NULL);
 
 	switch (color) {
 	case PNG_COLOR_TYPE_RGB:
@@ -181,6 +182,22 @@ int png_open(struct png_reader **pp, const void *data, size_t *len, struct png_c
 	default:
 		error(p->png, "unsupported color format");
 	}
+
+	if (bits != 8)
+		error(p->png, "unsupported bit depth");
+
+	switch (ilace) {
+	case PNG_INTERLACE_NONE:
+		break;
+	case PNG_INTERLACE_ADAM7:
+		p->npasses = png_set_interlace_handling(p->png) - 1;
+		break;
+	default:
+		error(p->png, "unsupported interlace");
+	}
+
+	if (conf->width * conf->bpp / 8 != png_get_rowbytes(p->png, p->pnginfo))
+		error(p->png, "row size mismatch");
 
 	p->height = conf->height;
 	return 1;
@@ -207,6 +224,13 @@ int png_read(struct png_reader *p, const void *data, size_t *len, void *line)
 	p->e.errbuf.len = 0;
 	if (0 != setjmp(p->e.jmp))
 		return -1;
+
+	for (;  p->npasses > 0;  p->npasses--) {
+		for (;  p->line != p->height;  p->line++) {
+			png_read_row(p->png, line, NULL);
+		}
+		p->line = 0;
+	}
 
 	switch (p->state) {
 	case R_READ:
