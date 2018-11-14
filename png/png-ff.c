@@ -176,7 +176,7 @@ int png_open(struct png_reader **pp, const void *data, size_t *len, struct png_c
 		break;
 	case PNG_COLOR_TYPE_RGB_ALPHA:
 		conf->bpp = 32;
-		png_set_alpha_mode(p->png, PNG_ALPHA_PNG, PNG_GAMMA_LINEAR);
+		png_set_alpha_mode(p->png, PNG_ALPHA_PNG, PNG_DEFAULT_sRGB);
 		break;
 	default:
 		error(p->png, "unsupported color format");
