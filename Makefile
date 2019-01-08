@@ -46,7 +46,7 @@ dynanorm: $(BUILDDIR)/DynamicAudioNormalizer-$(DYNANORM_VER)
 	$(MAKE) -f $(FF3PT)/dynanorm/Makefile -C $(BUILDDIR)/DynamicAudioNormalizer-$(DYNANORM_VER)
 	$(COPY) $(BUILDDIR)/DynamicAudioNormalizer-$(DYNANORM_VER)/*.$(SO) $(BINDIR)
 
-FDK_VER := 0.1.4
+FDK_VER := 0.1.6
 $(SRCDIR)/fdk-aac-v$(FDK_VER).tar.gz:
 	cd $(SRCDIR) && $(DL) -o fdk-aac-v$(FDK_VER).tar.gz https://github.com/mstorsjo/fdk-aac/archive/v$(FDK_VER).tar.gz
 $(BUILDDIR)/fdk-aac-$(FDK_VER): $(SRCDIR)/fdk-aac-v$(FDK_VER).tar.gz

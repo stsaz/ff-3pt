@@ -29,6 +29,7 @@ static const char* const dec_errs_2000[] = {
 	"AAC_DEC_INVALID_SBR_CONFIG: The SBR configuration is not supported.",
 	"AAC_DEC_SET_PARAM_FAIL: The parameter could not be set. Either the value was out of range or the parameter does not exist.",
 	"AAC_DEC_NEED_TO_RESTART: The decoder needs to be restarted, since the requiered configuration change cannot be performed.",
+	"AAC_DEC_OUTPUT_BUFFER_TOO_SMALL: The provided output buffer is too small.",
 };
 
 static const char* const dec_errs_4000[] = {
@@ -72,7 +73,7 @@ const char* fdkaac_decode_errstr(int e)
 	default:
 		return "";
 	}
-	if ((e & 0xfff) > n)
+	if ((e & 0xfff) >= n)
 		return "";
 	return ee[e & 0xfff];
 }
@@ -118,7 +119,7 @@ int fdkaac_decode(fdkaac_decoder *dec, const char *data, size_t len, short *pcm)
 	if (0 != (r = aacDecoder_Fill(dec, &bdata, &ulen, &valid)))
 		return -r;
 
-	r = aacDecoder_DecodeFrame(dec, pcm, 0, 0);
+	r = aacDecoder_DecodeFrame(dec, pcm, AAC_MAXCHANNELS * AAC_MAXFRAMESAMPLES, 0);
 	if (r == AAC_DEC_NOT_ENOUGH_BITS)
 		return 0;
 	else if (r != 0)

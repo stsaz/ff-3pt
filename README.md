@@ -11,7 +11,7 @@ The libraries aren't compatible with any applications that use the official buil
 AUDIO:
 * alac-rev2
 * DynamicAudioNormalizer-2.10
-* fdk-aac-0.1.4
+* fdk-aac-0.1.6
 * flac-1.3.2
 * lame-3.100
 * MAC-433

@@ -13,6 +13,11 @@ Simon Zolin, 2016 */
 typedef void fdkaac_decoder;
 typedef struct fdkaac_encoder fdkaac_encoder;
 
+enum AAC_MAX {
+	AAC_MAXFRAMESAMPLES = 2048,
+	AAC_MAXCHANNELS = 8,
+};
+
 enum AAC_AOT {
 	AAC_LC = 2,
 	AAC_HE = 5, //SBR
@@ -56,6 +61,7 @@ EXP int fdkaac_decode_open(fdkaac_decoder **dec, const char *conf, size_t len);
 EXP void fdkaac_decode_free(fdkaac_decoder *dec);
 
 /**
+pcm: buffer with size = 2 * AAC_MAXCHANNELS * AAC_MAXFRAMESAMPLES (i.e. 2*8*2048)
 Return the number of decoded samples;  0 if more data is needed;  <0 on error. */
 EXP int fdkaac_decode(fdkaac_decoder *dec, const char *data, size_t len, short *pcm);
 
