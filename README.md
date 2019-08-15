@@ -28,6 +28,9 @@ COMPRESSION:
 * xz-5.2.2 (liblzma)
 * zlib-1.2.8
 
+ENCRYPTION:
+* Brian Gladman's AES (0337bc7)
+
 PICTURES:
 * jpeg-9b
 * png-1.6.24

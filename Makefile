@@ -4,7 +4,7 @@ include ./makeconf
 
 FF3PT := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 DL := curl -L
-COPY := cp
+COPY := cp -v
 TAR_XZ := tar cJf
 UNTAR_XZ := tar xJf
 UNTAR_GZ := tar xzf
@@ -16,13 +16,14 @@ BUILDDIR := /tmp/ff3pt-build
 BINDIR := $(FF3PT)/_bin/$(OS)-$(ARCH)
 ALIBS := alac dynanorm fdk-aac flac lame mac mpg123 musepack ogg opus soxr vorbis wavpack
 PLIBS := jpeg png
+ENCLIBS := aes
 
 
 help:
 	mkdir -p $(SRCDIR) $(BUILDDIR) $(BINDIR)
-	@echo Specify the library to build: $(ALIBS) $(PLIBS)
+	@echo Specify the library to build: $(ALIBS) $(PLIBS) $(ENCLIBS)
 
-.PHONY: $(ALIBS) $(PLIBS)
+.PHONY: $(ALIBS) $(PLIBS) $(ENCLIBS)
 
 package:
 	$(TAR_XZ) _bin/$(OS)-$(ARCH)-$(VER).tar.xz -C _bin $(OS)-$(ARCH)
@@ -146,6 +147,19 @@ $(BUILDDIR)/wavpack-$(WAVPACK_VER): $(SRCDIR)/wavpack-$(WAVPACK_VER).tar.bz2
 wavpack: $(BUILDDIR)/wavpack-$(WAVPACK_VER)
 	$(MAKE) -f $(FF3PT)/wavpack/Makefile -C $(BUILDDIR)/wavpack-$(WAVPACK_VER)
 	$(COPY) $(BUILDDIR)/wavpack-$(WAVPACK_VER)/*.$(SO) $(BINDIR)
+
+
+# ENCRYPTION
+
+$(SRCDIR)/aes:
+	cd $(SRCDIR) && git clone --depth=1 https://github.com/BrianGladman/aes.git
+
+$(BUILDDIR)/aes: $(SRCDIR)/aes
+	$(COPY) -r $(SRCDIR)/aes $(BUILDDIR)
+
+aes: $(BUILDDIR)/aes
+	$(MAKE) -f $(FF3PT)/aes/Makefile -C $(BUILDDIR)/aes
+	$(COPY) $(BUILDDIR)/aes/*.a $(BINDIR)
 
 
 # PIC
