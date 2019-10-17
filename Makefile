@@ -77,7 +77,8 @@ lame: $(BUILDDIR)/lame-$(LAME_VER)
 
 MAC_VER := 433
 $(SRCDIR)/MAC_SDK_$(MAC_VER).zip:
-	cd $(SRCDIR) && $(DL) -O http://monkeysaudio.com/files/MAC_SDK_$(MAC_VER).zip
+	# cd $(SRCDIR) && $(DL) -O http://monkeysaudio.com/files/MAC_SDK_$(MAC_VER).zip
+	cd $(SRCDIR) && $(DL) -O https://github.com/stsaz/ff-3pt/files/3720271/MAC_SDK_433.zip
 $(BUILDDIR)/mac: $(SRCDIR)/MAC_SDK_$(MAC_VER).zip
 	$(UNZIP) $(SRCDIR)/MAC_SDK_$(MAC_VER).zip -d $(BUILDDIR)/mac
 mac: $(BUILDDIR)/mac
