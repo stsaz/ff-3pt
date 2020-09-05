@@ -15,7 +15,7 @@ index 65e8f49..99da25b 100644
  #ifdef _MSC_VER
      #include <intrin.h>
  #endif
-+#include <FFOS/cpu.h>
++#include <ffcpuid.h>
  
  namespace APE
  {

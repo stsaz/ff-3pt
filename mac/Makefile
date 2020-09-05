@@ -6,7 +6,7 @@ DEBUG := 0
 include $(FF3PT)/makeconf
 
 CFLAGS += \
-	-ISource/Shared -ISource/MACLib -I$(FF3PT)/mac -I$(FF3PT)/../ffos
+	-ISource/Shared -ISource/MACLib -I$(FF3PT)/mac
 
 ifeq ($(OS),win)
 CFLAGS += -DPLATFORM_WINDOWS -DWINVER=0x0501
