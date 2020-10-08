@@ -99,8 +99,7 @@ LICENSE
 
 This repository contains copies of original and auto-generated code from 3rd party libraries.  This code is the property of their owners.  This code and binary/object files created using this code are licensed accordingly to the licenses of those libraries.
 
-All other code provided here is free for use in open-source and proprietary projects.
-You may distribute, redistribute, modify the whole code or the parts of it, just keep the original copyright statement inside the files.
+All other code provided here is absolutely free.
 
 ---------------
 
