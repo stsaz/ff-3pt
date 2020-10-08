@@ -11,8 +11,15 @@ Simon Zolin, 2019 */
 #endif
 
 
+enum AES_MODE {
+	AES_CBC,
+	AES_CFB,
+	AES_OFB,
+};
+
 typedef struct aes_ctx {
 	void *ctx;
+	unsigned int mode;
 } aes_ctx;
 
 
@@ -20,7 +27,7 @@ typedef struct aes_ctx {
 extern "C" {
 #endif
 
-EXP int aes_decrypt_init(aes_ctx *a, const unsigned char *key, size_t key_len);
+EXP int aes_decrypt_init(aes_ctx *a, const unsigned char *key, size_t key_len, unsigned int flags);
 
 static inline void aes_decrypt_free(aes_ctx *a)
 {
@@ -31,7 +38,7 @@ EXP int aes_decrypt_chunk(aes_ctx *a, const unsigned char *in, unsigned char *ou
 	size_t len, unsigned char *iv);
 
 
-EXP int aes_encrypt_init(aes_ctx *a, const unsigned char *key, size_t key_len);
+EXP int aes_encrypt_init(aes_ctx *a, const unsigned char *key, size_t key_len, unsigned int flags);
 
 static inline void aes_encrypt_free(aes_ctx *a)
 {
