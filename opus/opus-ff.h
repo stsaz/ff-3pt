@@ -38,9 +38,13 @@ EXP void opus_decode_free(opus_ctx *c);
 #define OPUS_BUFLEN(rate)  (120 * (rate) / 1000)
 
 /** Decode one packet.
+Emulate packet loss: (packet=NULL, len=0).
 @pcm: output samples.
 Return the number of audio samples decoded;  <0 on error. */
 EXP int opus_decode_f(opus_ctx *c, const void *packet, unsigned int len, float *pcm);
+
+/** Reset decoder */
+EXP void opus_decode_reset(opus_ctx *c);
 
 
 /** Get vendor string needed for Opus tags packet when encoding. */

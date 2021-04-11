@@ -35,6 +35,11 @@ int opus_decode_f(opus_ctx *oc, const void *packet, unsigned int len, float *pcm
 	return r;
 }
 
+void opus_decode_reset(opus_ctx *c)
+{
+	opus_decoder_ctl(c, OPUS_RESET_STATE);
+}
+
 
 const char* opus_vendor(void)
 {
@@ -73,13 +78,16 @@ int opus_encode_create(opus_ctx **pc, opus_encode_conf *conf)
 	if (e != OPUS_OK)
 		return e;
 
-	if (conf->bitrate != 0 && OPUS_OK != (e = opus_encoder_ctl(c, OPUS_SET_BITRATE(conf->bitrate))))
+	if (conf->bitrate != 0
+		&& OPUS_OK != (e = opus_encoder_ctl(c, OPUS_SET_BITRATE(conf->bitrate))))
 		goto fail;
 
-	if (conf->complexity != 0 && OPUS_OK != (e = opus_encoder_ctl(c, OPUS_SET_COMPLEXITY(conf->complexity - 1))))
+	if (conf->complexity != 0
+		&& OPUS_OK != (e = opus_encoder_ctl(c, OPUS_SET_COMPLEXITY(conf->complexity - 1))))
 		goto fail;
 
-	if (conf->bandwidth != 0 && OPUS_OK != (e = opus_encoder_ctl(c, OPUS_SET_MAX_BANDWIDTH(bandwidth_val(conf->bandwidth)))))
+	if (conf->bandwidth != 0
+		&& OPUS_OK != (e = opus_encoder_ctl(c, OPUS_SET_MAX_BANDWIDTH(bandwidth_val(conf->bandwidth)))))
 		goto fail;
 
 	int lookahead;
