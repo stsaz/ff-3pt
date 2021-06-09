@@ -33,6 +33,7 @@ ENCRYPTION:
 
 PICTURES:
 * jpeg-9b
+* jpeg-turbo-2.1.0
 * png-1.6.24
 
 DATABASE

@@ -10,12 +10,12 @@ UNTAR_XZ := tar xJf
 UNTAR_GZ := tar xzf
 UNTAR_BZ2 := tar xjf
 UNZIP := unzip
-MAKE := make -rR FF3PT=$(FF3PT)
+MAKE := make -j8 -rR FF3PT=$(FF3PT)
 SRCDIR := $(FF3PT)/_src
 BUILDDIR := /tmp/ff3pt-build
 BINDIR := $(FF3PT)/_bin/$(OS)-$(ARCH)
 ALIBS := alac dynanorm fdk-aac flac lame mac mpg123 musepack ogg opus soxr vorbis wavpack
-PLIBS := jpeg png
+PLIBS := jpeg jpeg-turbo png
 ENCLIBS := aes
 
 
@@ -174,6 +174,16 @@ $(BUILDDIR)/jpeg-$(JPEG_VER2): $(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz
 jpeg: $(BUILDDIR)/jpeg-$(JPEG_VER2)
 	$(MAKE) -f $(FF3PT)/jpeg/Makefile -C $(BUILDDIR)/jpeg-$(JPEG_VER2)
 	$(COPY) $(BUILDDIR)/jpeg-$(JPEG_VER2)/*.$(SO) $(BINDIR)
+
+JPEGTURBO_VER := 2.1.0
+JPEGTURBO_URL := https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/$(JPEGTURBO_VER).zip
+$(SRCDIR)/libjpeg-turbo-$(JPEGTURBO_VER).zip:
+	cd $(SRCDIR) && $(DL) -O $(JPEGTURBO_URL)
+$(BUILDDIR)/libjpeg-turbo-$(JPEGTURBO_VER): $(SRCDIR)/libjpeg-turbo-$(JPEGTURBO_VER).zip
+	$(UNZIP) $< -d $(BUILDDIR)
+jpeg-turbo: $(BUILDDIR)/libjpeg-turbo-$(JPEGTURBO_VER)
+	$(MAKE) -f $(FF3PT)/jpeg-turbo/Makefile -C $<
+	$(COPY) $</*.$(SO) $(BINDIR)
 
 PNG_VER := 1.6.35
 $(SRCDIR)/libpng-$(PNG_VER).tar.xz:
