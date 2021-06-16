@@ -15,7 +15,7 @@ SRCDIR := $(FF3PT)/_src
 BUILDDIR := /tmp/ff3pt-build
 BINDIR := $(FF3PT)/_bin/$(OS)-$(ARCH)
 ALIBS := alac dynanorm fdk-aac flac lame mac mpg123 musepack ogg opus soxr vorbis wavpack
-PLIBS := jpeg jpeg-turbo png
+PLIBS := jpeg-turbo png
 ENCLIBS := aes
 
 
@@ -164,16 +164,6 @@ aes: $(BUILDDIR)/aes
 
 
 # PIC
-
-JPEG_VER := v9b
-JPEG_VER2 := 9b
-$(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz:
-	cd $(SRCDIR) && $(DL) -O http://www.ijg.org/files/jpegsrc.$(JPEG_VER).tar.gz
-$(BUILDDIR)/jpeg-$(JPEG_VER2): $(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz
-	$(UNTAR_GZ) $(SRCDIR)/jpegsrc.$(JPEG_VER).tar.gz -C $(BUILDDIR)
-jpeg: $(BUILDDIR)/jpeg-$(JPEG_VER2)
-	$(MAKE) -f $(FF3PT)/jpeg/Makefile -C $(BUILDDIR)/jpeg-$(JPEG_VER2)
-	$(COPY) $(BUILDDIR)/jpeg-$(JPEG_VER2)/*.$(SO) $(BINDIR)
 
 JPEGTURBO_VER := 2.1.0
 JPEGTURBO_URL := https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/$(JPEGTURBO_VER).zip

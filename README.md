@@ -15,7 +15,6 @@ AUDIO:
 * flac-1.3.2
 * lame-3.100
 * MAC-433
-* mad-0.15.1b (obsolete)
 * mpg123-1.25.10
 * musepack-r475
 * ogg-1.3.3
@@ -32,7 +31,6 @@ ENCRYPTION:
 * Brian Gladman's AES (0337bc7)
 
 PICTURES:
-* jpeg-9b
 * jpeg-turbo-2.1.0
 * png-1.6.24
 
