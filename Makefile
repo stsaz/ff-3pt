@@ -112,14 +112,15 @@ ogg: $(BUILDDIR)/libogg-$(OGG_VER)
 	$(MAKE) -f $(FF3PT)/ogg/Makefile -C $(BUILDDIR)/libogg-$(OGG_VER)
 	$(COPY) $(BUILDDIR)/libogg-$(OGG_VER)/*.$(SO) $(BINDIR)
 
-OPUS_VER := 1.2.1
+OPUS_VER := 1.3.1
+OPUS_URL := https://archive.mozilla.org/pub/opus/opus-$(OPUS_VER).tar.gz
 $(SRCDIR)/opus-$(OPUS_VER).tar.gz:
-	cd $(SRCDIR) && $(DL) -O https://archive.mozilla.org/pub/opus/opus-$(OPUS_VER).tar.gz
+	cd $(SRCDIR) && $(DL) -O $(OPUS_URL)
 $(BUILDDIR)/opus-$(OPUS_VER): $(SRCDIR)/opus-$(OPUS_VER).tar.gz
-	$(UNTAR_GZ) $(SRCDIR)/opus-$(OPUS_VER).tar.gz -C $(BUILDDIR)
+	$(UNTAR_GZ) $< -C $(BUILDDIR)
 opus: $(BUILDDIR)/opus-$(OPUS_VER)
-	$(MAKE) -f $(FF3PT)/opus/Makefile -C $(BUILDDIR)/opus-$(OPUS_VER)
-	$(COPY) $(BUILDDIR)/opus-$(OPUS_VER)/*.$(SO) $(BINDIR)
+	$(MAKE) -f $(FF3PT)/opus/Makefile -C $<
+	$(COPY) $</*.$(SO) $(BINDIR)
 
 SOXR_VER := 0.1.3
 $(SRCDIR)/soxr-$(SOXR_VER)-Source.tar.xz:
@@ -131,14 +132,15 @@ soxr: $(BUILDDIR)/soxr-$(SOXR_VER)-Source
 	$(MAKE) -f $(FF3PT)/soxr/Makefile -C $(BUILDDIR)/soxr-$(SOXR_VER)-Source
 	$(COPY) $(BUILDDIR)/soxr-$(SOXR_VER)-Source/*.$(SO) $(BINDIR)
 
-VORBIS_VER := 1.3.6
+VORBIS_VER := 1.3.7
+VORBIS_URL := http://downloads.xiph.org/releases/vorbis/libvorbis-$(VORBIS_VER).tar.xz
 $(SRCDIR)/libvorbis-$(VORBIS_VER).tar.xz:
-	cd $(SRCDIR) && $(DL) -O http://downloads.xiph.org/releases/vorbis/libvorbis-$(VORBIS_VER).tar.xz
+	cd $(SRCDIR) && $(DL) -O $(VORBIS_URL)
 $(BUILDDIR)/libvorbis-$(VORBIS_VER): $(SRCDIR)/libvorbis-$(VORBIS_VER).tar.xz
-	$(UNTAR_XZ) $(SRCDIR)/libvorbis-$(VORBIS_VER).tar.xz -C $(BUILDDIR)
+	$(UNTAR_XZ) $< -C $(BUILDDIR)
 vorbis: $(BUILDDIR)/libvorbis-$(VORBIS_VER) ogg
-	$(MAKE) -f $(FF3PT)/vorbis/Makefile -C $(BUILDDIR)/libvorbis-$(VORBIS_VER)
-	$(COPY) $(BUILDDIR)/libvorbis-$(VORBIS_VER)/*.$(SO) $(BINDIR)
+	$(MAKE) -f $(FF3PT)/vorbis/Makefile -C $<
+	$(COPY) $</*.$(SO) $(BINDIR)
 
 WAVPACK_VER := 4.75.0
 $(SRCDIR)/wavpack-$(WAVPACK_VER).tar.bz2:
@@ -175,11 +177,12 @@ jpeg-turbo: $(BUILDDIR)/libjpeg-turbo-$(JPEGTURBO_VER)
 	$(MAKE) -f $(FF3PT)/jpeg-turbo/Makefile -C $<
 	$(COPY) $</*.$(SO) $(BINDIR)
 
-PNG_VER := 1.6.35
+PNG_VER := 1.6.37
+PNG_URL := https://download.sourceforge.net/libpng/libpng-$(PNG_VER).tar.xz
 $(SRCDIR)/libpng-$(PNG_VER).tar.xz:
-	cd $(SRCDIR) && $(DL) -O https://download.sourceforge.net/libpng/libpng-$(PNG_VER).tar.xz
+	cd $(SRCDIR) && $(DL) -O $(PNG_URL)
 $(BUILDDIR)/libpng-$(PNG_VER): $(SRCDIR)/libpng-$(PNG_VER).tar.xz
-	$(UNTAR_XZ) $(SRCDIR)/libpng-$(PNG_VER).tar.xz -C $(BUILDDIR)
+	$(UNTAR_XZ) $< -C $(BUILDDIR)
 png: $(BUILDDIR)/libpng-$(PNG_VER)
-	$(MAKE) -f $(FF3PT)/png/Makefile -C $(BUILDDIR)/libpng-$(PNG_VER)
-	$(COPY) $(BUILDDIR)/libpng-$(PNG_VER)/*.$(SO) $(BINDIR)
+	$(MAKE) -f $(FF3PT)/png/Makefile -C $<
+	$(COPY) $</*.$(SO) $(BINDIR)

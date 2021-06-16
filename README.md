@@ -18,9 +18,9 @@ AUDIO:
 * mpg123-1.25.10
 * musepack-r475
 * ogg-1.3.3
-* opus-1.2.1
+* opus-1.3.1
 * soxr-0.1.3
-* vorbis-1.3.6
+* vorbis-1.3.7
 * wavpack-4.75.0
 
 COMPRESSION:
@@ -32,9 +32,9 @@ ENCRYPTION:
 
 PICTURES:
 * jpeg-turbo-2.1.0
-* png-1.6.24
+* png-1.6.37
 
-DATABASE
+DATABASE:
 * sqlite-3.16.2
 * postgresql-9.2.4-1
 
